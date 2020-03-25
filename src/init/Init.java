@@ -5,6 +5,16 @@ import util.DBManager;
 
 public class Init {
 
+    static String[] autoinc_tables = new String[]{
+            "person",
+            "address",
+            "account",
+            "loan",
+            "branch",
+            "card",
+            "transaction",
+            "vendor"};
+
     public static void dropAllTable()
     {
         Connection conn = DBManager.getConnection();
@@ -213,6 +223,49 @@ public class Init {
                     "primary key (transaction_id),\n" +
                     "foreign key (card_id) references card,\n" +
                     "foreign key (vendor_id) references vendor);");
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void dropAutoInc()
+    {
+        Connection conn = DBManager.getConnection();
+
+        try (
+                Statement s = conn.createStatement();
+        ) {
+            for (String table : autoinc_tables)
+            {
+                s.execute("drop trigger " + table + "_autoinc");
+                s.execute("drop sequence " + table + "_id_seq");
+            }
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void initAutoInc()
+    {
+        Connection conn = DBManager.getConnection();
+
+        try (
+                Statement s = conn.createStatement();
+        ) {
+            for (String table : autoinc_tables)
+            {
+                s.execute("create sequence " + table + "_id_seq");
+                s.execute("create trigger " + table + "_autoinc\n" +
+                        "before insert on " + table + "\n" +
+                        "for each row\n" +
+                        "begin\n" +
+                        "\tselect " + table + "_id_seq.nextval\n" +
+                        "\tinto :new." + table + "_id\n" +
+                        "\tfrom dual;\n" +
+                        "end;");
+            }
         }
         catch (SQLException e) {
             e.printStackTrace();

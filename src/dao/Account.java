@@ -1,12 +1,19 @@
 package dao;
 
+import java.sql.*;
+import util.DBManager;
+
 public class Account implements DBObject {
     private static final String table_name = "account";
 
-    private int account_id;
 
 
     public Account()
+    {
+
+    }
+
+    public Account(int account_id)
     {
 
     }
@@ -23,6 +30,9 @@ public class Account implements DBObject {
 
     public int save()
     {
+
+
+
         return -1;
     }
 
