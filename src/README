@@ -1,0 +1,71 @@
+# Nickel Bank
+CSE 341
+Jacob Oakman
+jco222
+
+## Slogans
+
+Nickel Bank, "Where your well-being is one of our priorities!".
+Some say banks are a dime a dozen, we think they're 6 times more valuable than that!
+A penny rounding error is a penny earned!
+Passwords stored in plaintext to maintain authenticity.
+Guaranteed to be less racist than the leading brands.
+Our loans may be subprime but our customer service isn't!
+Don't watch the big short!
+
+## Abstract
+
+
+
+## Functionality
+
+Nickel offers a variety of banking services to its customers:
+• Accounts: Nickel offers both savings and checking accounts. These accounts differ in their interest
+rates and in the types of transactions allowed. An account may belong to a single customer or may
+be owned jointly by more than one. Account balances are maintained. Checking accounts may have
+a minimum balance (check with bank management for details) and penalties when a customer goes
+below that minimum balance. Savings accounts are not permitted to be overdrawn.
+
+• Loans: Nickel offers two types of loans. Mortgages are secured by the customer(s)’ home. Unsecured
+loans are exactly that, unsecured. Loans have an interest rate, an amount, and a monthly payment.
+• Payment cards: Nickel offers both a debit and a credit card. Debit cards are tied to a checking account.
+Credit cards have an interest rate, a credit limit, a running balance, and a balance due.
+
+• Branch banking: Nickel has several physical locations. Some offer only an ATM. Nickel ATMs allow
+debit-card holders to withdraw cash and check balances. No deposit services are offered at ATMs.
+Other locations offer both an ATM and in-person transactions with a bank teller. These locations
+accept deposits.
+
+• Services NOT offered: Nickel, given its low-cost, low-feature, and somewhat archaic business strategy,
+does not offer automated deposits and payments, and does not offer any form of online banking (neither
+web nor smartphone). These may be added in a year when the bank will rename itself Fifty-Cent Bank,
+hire a celebrity spokesperson, and become ten times better. Management may agree to an early rollout
+of these features if the IT development team is ahead of schedule.
+
+1. Bank management: Among the things this interface may offer are computation of total loans, total
+accounts, totals on a per-customer basis, transaction frequency and dollar volume (per day, month,
+year), activity at each branch (transaction frequency, dollar amounts, etc.)
+
+2. Account deposit/withdrawal: These happen at a branch (teller or ATM). Withdrawals cannot make a
+savings account go negative; those must be declined. If a checking account withdrawal takes it below
+the minimum balance a penalty must be imposed.
+
+3. Payment on a loan or credit card.
+
+4. Opening of a new account.
+
+5. Obtaining a new or replacement credit or debit card.
+
+6. Taking out a new loan.
+
+7. Purchases using a card: If the card is a debit card, the balance in the associated checking account must
+be sufficient to cover the purchase. If the card is a credit card, the outstanding balance on the card
+after the transaction must not exceed the credit limit. In either of these cases, the purchase would be
+declined. For this project, we shall not be monitoring details of the various vendors at which purchases
+are made, beyond a vendor name and ID.
+
+There are a variety of transactions that occur. Many of these are initiated by a customer and include
+withdrawals, deposits, fund transfers, purchases with a debit or credit card, loan payments, and credit
+card balance payments.
+
+##
