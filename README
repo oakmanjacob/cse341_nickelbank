@@ -22,7 +22,7 @@ Don't watch the big short!
 Nickel offers a variety of banking services to its customers:
 • Accounts: Nickel offers both savings and checking accounts. These accounts differ in their interest
 rates and in the types of transactions allowed. An account may belong to a single customer or may
-be owned jointly by more than one. Account balances are maintained. Checking accounts may have
+be owned jointly by more than one. dao.Account balances are maintained. Checking accounts may have
 a minimum balance (check with bank management for details) and penalties when a customer goes
 below that minimum balance. Savings accounts are not permitted to be overdrawn.
 
@@ -46,7 +46,7 @@ of these features if the IT development team is ahead of schedule.
 accounts, totals on a per-customer basis, transaction frequency and dollar volume (per day, month,
 year), activity at each branch (transaction frequency, dollar amounts, etc.)
 
-2. Account deposit/withdrawal: These happen at a branch (teller or ATM). Withdrawals cannot make a
+2. dao.Account deposit/withdrawal: These happen at a branch (teller or ATM). Withdrawals cannot make a
 savings account go negative; those must be declined. If a checking account withdrawal takes it below
 the minimum balance a penalty must be imposed.
 

@@ -1,3 +1,5 @@
+package dao;
+
 public interface DBObject {
 
     String table_name = null;

@@ -1,3 +1,5 @@
+package dao;
+
 public class Account implements DBObject {
     private static final String table_name = "account";
 

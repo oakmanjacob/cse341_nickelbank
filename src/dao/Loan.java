@@ -1,3 +1,5 @@
+package dao;
+
 public class Loan implements DBObject {
 
     public int save()

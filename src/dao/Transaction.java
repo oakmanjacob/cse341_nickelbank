@@ -1,3 +1,5 @@
+package dao;
+
 public class Transaction implements DBObject {
 
     public int save()
