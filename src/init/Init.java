@@ -98,7 +98,7 @@ public class Init {
                     "(account_id varchar(12),\n" +
                     "account_number varchar(20) not null,\n" +
                     "type varchar(10) default 'checking' not null,\n" +
-                    "interest_rate numeric(2, 3) default 0 not null,\n" +
+                    "interest_rate numeric(5, 2) default 0 not null,\n" +
                     "min_balance numeric(4, 0) default 0 not null,\n" +
                     "created timestamp with time zone default current_timestamp not null,\n" +
                     "primary key (account_id),\n" +
@@ -114,10 +114,10 @@ public class Init {
             s.execute("create table loan\n" +
                     "(loan_id varchar(12),\n" +
                     "person_id varchar(12),\n" +
-                    "type varchar(10) not null default 'unsecured',\n" +
-                    "amount numeric(8,2) not null,\n" +
-                    "interest_rate numeric(3,2) not null default 0,\n" +
-                    "monthly_payment numeric(8,2) not null default 0,\n" +
+                    "type varchar(10) default 'unsecured' not null,\n" +
+                    "amount numeric(10,8) not null,\n" +
+                    "interest_rate numeric(5,2) default 0 not null,\n" +
+                    "monthly_payment numeric(10,8)default 0 not null,\n" +
                     "created timestamp with time zone default current_timestamp not null,\n" +
                     "primary key (loan_id),\n" +
                     "foreign key (person_id) references person);");
@@ -152,8 +152,8 @@ public class Init {
 
             s.execute("create table card_credit\n" +
                     "(card_id varchar(12),\n" +
-                    "credit_limit numeric(8,2) default 0 not null,\n" +
-                    "interest_rate numeric(2,3) default 0 not null,\n" +
+                    "credit_limit numeric(10,8) default 0 not null,\n" +
+                    "interest_rate numeric(5,2) default 0 not null,\n" +
                     "primary key (card_id),\n" +
                     "foreign key (card_id) references card\n" +
                     "on delete cascade);");
@@ -172,7 +172,7 @@ public class Init {
                     "parent_transaction_id varchar(12),\n" +
                     "person_id varchar(12),\n" +
                     "branch_id varchar(12),\n" +
-                    "amount numeric(8,2) not null,\n" +
+                    "amount numeric(10,8) not null,\n" +
                     "type varchar(16) not null,\n" +
                     "status varchar(16) default 'fulfilled' not null,\n" +
                     "created timestamp with time zone default current_timestamp not null,\n" +

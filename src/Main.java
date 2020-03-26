@@ -12,7 +12,7 @@ public class Main {
         DBManager dbManager = new DBManager();
         dbManager.connect();
 
-        Init.initAutoInc();
+
 
         dbManager.disconnect();
     }
