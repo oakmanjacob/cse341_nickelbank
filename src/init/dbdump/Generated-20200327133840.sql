@@ -1,0 +1,20 @@
+--------------------------------------------------------
+--  File created - Friday-March-27-2020   
+--------------------------------------------------------
+@C:\Users\Jacob\IdeaProjects\jco222oakman\src\init\ACCOUNT_DATA_TABLE.sql
+@C:\Users\Jacob\IdeaProjects\jco222oakman\src\init\ADDRESS_DATA_TABLE.sql
+@C:\Users\Jacob\IdeaProjects\jco222oakman\src\init\BRANCH_DATA_TABLE.sql
+@C:\Users\Jacob\IdeaProjects\jco222oakman\src\init\CARD_DATA_TABLE.sql
+@C:\Users\Jacob\IdeaProjects\jco222oakman\src\init\CARD_CREDIT_DATA_TABLE.sql
+@C:\Users\Jacob\IdeaProjects\jco222oakman\src\init\CARD_DEBIT_DATA_TABLE.sql
+@C:\Users\Jacob\IdeaProjects\jco222oakman\src\init\LOAN_DATA_TABLE.sql
+@C:\Users\Jacob\IdeaProjects\jco222oakman\src\init\LOAN_SECURED_DATA_TABLE.sql
+@C:\Users\Jacob\IdeaProjects\jco222oakman\src\init\PERSON_DATA_TABLE.sql
+@C:\Users\Jacob\IdeaProjects\jco222oakman\src\init\PERSON_ACCOUNT_DATA_TABLE.sql
+@C:\Users\Jacob\IdeaProjects\jco222oakman\src\init\PROPERTY_DATA_TABLE.sql
+@C:\Users\Jacob\IdeaProjects\jco222oakman\src\init\TRANSACTION_DATA_TABLE.sql
+@C:\Users\Jacob\IdeaProjects\jco222oakman\src\init\TRANSACTION_EXTERNAL_DATA_TABLE.sql
+@C:\Users\Jacob\IdeaProjects\jco222oakman\src\init\TRANSACTION_PAYMENT_CREDIT_DATA_TABLE.sql
+@C:\Users\Jacob\IdeaProjects\jco222oakman\src\init\TRANSACTION_PAYMENT_LOAN_DATA_TABLE.sql
+@C:\Users\Jacob\IdeaProjects\jco222oakman\src\init\TRANSACTION_TRANSFER_DATA_TABLE.sql
+@C:\Users\Jacob\IdeaProjects\jco222oakman\src\init\VENDOR_DATA_TABLE.sql
