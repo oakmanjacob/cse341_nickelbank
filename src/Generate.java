@@ -24,7 +24,7 @@ public class Generate {
         {
             double interest_rate = r.nextInt(30) / 10.0;
 
-            String sql = "insert into account values"
+            String sql = "insert into account values";
         }
 
     }

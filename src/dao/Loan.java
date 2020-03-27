@@ -2,13 +2,13 @@ package dao;
 
 public class Loan implements DBObject {
 
-    public int save()
+    public boolean save()
     {
-        return -1;
+        return false;
     }
 
-    public int delete()
+    public boolean delete()
     {
-        return -1;
+        return false;
     }
 }

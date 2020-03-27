@@ -17,7 +17,7 @@ public class Person implements DBObject {
 
     private boolean connected;
 
-    public int save()
+    public boolean save()
     {
         Connection conn = DBManager.getConnection();
         String query = connected ? "replace" : "insert";
@@ -26,7 +26,7 @@ public class Person implements DBObject {
         try (
                 PreparedStatement ps = conn.prepareStatement(query);
         ) {
-            ps.setString(1, table_name);
+            //ps.setString(1, table_name);
             ps.setString(3, first_name);
             ps.setString(4, last_name);
             ps.setString(5, email);
@@ -40,11 +40,11 @@ public class Person implements DBObject {
 
         }
 
-        return -1;
+        return false;
     }
 
-    public int delete()
+    public boolean delete()
     {
-        return -1;
+        return false;
     }
 }
