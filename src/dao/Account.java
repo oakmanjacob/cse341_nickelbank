@@ -1,200 +1,107 @@
 package dao;
 
-import java.sql.*;
-import java.sql.Date;
-import java.util.*;
 import util.DBManager;
 
-public class Account implements DBObject {
+import java.sql.*;
+
+public class Account {
     private static final String table_name = "account";
-    private Long account_id;
-    private Long account_number;
-    private StringBuilder type;
-    private Double interest_rate;
-    private Double min_balance;
-    private Date created;
+    private long account_id;
+    private long account_number;
+    private String type;
+    private double interest_rate;
+    private double min_balance;
+    private Timestamp created;
 
-    private HashMap<String, Object> attributes;
-    private HashSet<String> edited;
+    private boolean saveTimestamp = false;
 
-
-    public Account()
-    {
-        account_id = null;
-        account_number = null;
-        type = null;
-        interest_rate = null;
-        min_balance = null;
-
-        attributes = new HashMap<String, Object>();
-        edited = new HashSet<String>();
-
-        attributes.put("account_id", account_id);
-        attributes.put("account_number", account_number);
-        attributes.put("type", type);
-        attributes.put("interest_rate", interest_rate);
-        attributes.put("min_balance", min_balance);
+    public Account(String type) {
+        this.account_id = 0;
+        this.type = type;
     }
 
-    public Account(int account_id)
-    {
+    public Account(long account_id) {
+        Connection conn = DBManager.getConnection();
+        String sql = "select * from account where account_id = ?;";
 
+        try (
+                PreparedStatement ps = conn.prepareStatement(sql);
+        ) {
+            ps.setLong(1, account_id);
+            ResultSet rs = ps.executeQuery();
+
+            this.account_id = rs.getLong("account_id");
+            this.account_number = rs.getLong("account_number");
+            this.type = rs.getString("type");
+            this.interest_rate = rs.getDouble("interest_rate");
+            this.min_balance = rs.getDouble("min_balance");
+            this.created = rs.getTimestamp("created");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public void setCreated(Timestamp created)
+    {
+        this.created = created;
+        this.saveTimestamp = true;
     }
 
     /**
      * Call PL/SQL function to calculate the current balance of the account
+     *
      * @return current account balance
      */
-    public double getBalance()
-    {
+    public double getBalance() {
         // TODO implement method
         return -1;
     }
 
-    public boolean save()
-    {
-        if (edited.size() != 0) {
-            Connection conn = DBManager.getConnection();
+    public boolean save() {
+        Connection conn = DBManager.getConnection();
 
-            if (account_id == null)
+        if (account_id == 0) {
+
+            String field = this.type.equals("savings") ? "interest_rate" : "min_balance";
+            String sql;
+
+            if (this.saveTimestamp)
             {
-                StringBuilder query = new StringBuilder("insert into " + table_name + " (");
-                String delim = "";
-                Object[] edit_list = edited.toArray();
-
-                for (Object s : edit_list) {
-                    if (s instanceof String) {
-                        query.append(delim);
-                        query.append(s);
-                        delim = ", ";
-                    }
-                }
-
-                query.append(") values (");
-
-                delim = "";
-
-                for (Object s : edit_list) {
-                    if (s instanceof String) {
-                        query.append(delim);
-                        query.append("?");
-                        delim = ", ";
-                    }
-                }
-
-                query.append(")");
-
-                try (
-                        PreparedStatement ps = conn.prepareStatement(query.toString());
-                ) {
-                    int i = 1;
-                    for (Object s : edit_list) {
-                        if (s instanceof String) {
-
-                            Object attr = attributes.get(s);
-                            if (attr instanceof Integer)
-                            {
-                                ps.setInt(i, (Integer)attr);
-                            }
-                            else if (attr instanceof Long)
-                            {
-                                ps.setLong(i, (Long)attr);
-                            }
-                            else if (attr instanceof Double)
-                            {
-                                ps.setDouble(i, (Double)attr);
-                            }
-                            else if (attr instanceof Date)
-                            {
-                                ps.setDate(i, (Date)attr);
-                            }
-                            else
-                            {
-                                ps.setString(i, attr.toString());
-                            }
-                            i++;
-                        }
-                    }
-
-                    //System.out.println(query.toString());
-
-                    ps.execute();
-                }
-                catch (SQLException e)
-                {
-                    e.printStackTrace();
-                }
+                sql = "insert into account (type, " + field + ", created)" +
+                        "values (?, ?, ?)";
             }
             else {
-                StringBuilder query = new StringBuilder("update " + table_name + " set ");
-                String delim = "";
-                Object[] edit_list = edited.toArray();
-
-                for (Object s : edit_list) {
-                    if (s instanceof String) {
-                        query.append(delim);
-                        query.append(s);
-                        query.append(" = ?");
-                        delim = ", ";
-                    }
-                }
-
-                query.append("where " + table_name + "_id = ?");
-
-                try (
-                    PreparedStatement ps = conn.prepareStatement(query.toString());
-                ) {
-                    int i = 1;
-                    for (Object s : edit_list) {
-                        if (s instanceof String) {
-
-                            Object attr = attributes.get(s);
-                            if (attr instanceof Integer)
-                            {
-                                ps.setInt(i, (Integer)attr);
-                            }
-                            else if (attr instanceof Long)
-                            {
-                                ps.setLong(i, (Long)attr);
-                            }
-                            else if (attr instanceof Date)
-                            {
-                                ps.setDate(i, (Date)attr);
-                            }
-                            else
-                            {
-                                ps.setString(i, attr.toString());
-                            }
-                            i++;
-                        }
-                    }
-                    ps.setLong(i, this.account_id);
-                    //ps.execute();
-                }
-                catch (SQLException e)
-                {
-                    e.printStackTrace();
-                }
+                sql = "insert into account (type, " + field + ")" +
+                        "values (?, ?)";
             }
 
+            try (
+                    PreparedStatement ps = conn.prepareStatement(sql);
+            ) {
+                ps.setString(1, this.type);
+
+                if (this.type.equals("savings")) {
+                    ps.setDouble(2, this.interest_rate);
+                }
+                else {
+                    ps.setDouble(2, this.min_balance);
+                }
+
+                if (this.saveTimestamp)
+                {
+                    ps.setTimestamp(3, created);
+                }
+
+                ps.execute();
+            } catch (SQLException e) {
+                e.printStackTrace();
+                return false;
+            }
+
+            this.saveTimestamp = false;
             return true;
         }
         return false;
-    }
-
-    public boolean delete()
-    {
-        return false;
-    }
-
-    public void set(String attr, Object value)
-    {
-        this.attributes.replace(attr, value);
-        this.edited.add(attr);
-    }
-
-    public Object get(String attr)
-    {
-        return this.attributes.get(attr);
     }
 }
