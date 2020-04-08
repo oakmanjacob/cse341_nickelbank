@@ -6,7 +6,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-public class Person implements DBObject {
+public class Person {
 
     private int account_id;
     private String first_name;

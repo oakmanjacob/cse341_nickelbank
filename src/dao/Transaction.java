@@ -1,6 +1,6 @@
 package dao;
 
-public class Transaction implements DBObject {
+public class Transaction {
 
     public boolean save()
     {

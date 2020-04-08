@@ -1,3 +1,5 @@
+package init;
+
 import dao.Account;
 import java.util.Random;
 
