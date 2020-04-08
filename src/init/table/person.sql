@@ -6,4 +6,5 @@ create table person
     phone varchar(16) not null,
     birth_date date not null,
     created timestamp with time zone default current_timestamp not null,
-    primary key (person_id));
+    primary key (person_id),
+    unique (email));

@@ -67,7 +67,7 @@ public class Main {
             case "e" :
             case "exit":
             case "quit":
-                System.out.println("We hate to see you go but love to watch you walk away.");
+                //System.out.println("We hate to see you go but love to watch you walk away.");
                 break;
             default : {
                 System.out.println("We do not have a section for \"" +  input + "\" please try again");

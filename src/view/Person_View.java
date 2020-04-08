@@ -7,10 +7,7 @@ import util.IOManager;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.nio.Buffer;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 
 public class Person_View {
     public static Person signup()
@@ -25,12 +22,12 @@ public class Person_View {
         person.setLastName(IOManager.getInputString());
         System.out.println("Please input your phone number");
         person.setPhone(IOManager.getInputStringPhone());
-        System.out.println("Please input your birth data in the form MM/DD/YYYY");
-        person.setBirthDate(IOManager.getInputDate());
+        System.out.println("Please input your birth data in the form YYYY-MM-DD");
+        person.setBirthDate(IOManager.getInputBirthDate());
 
         if (person.save())
         {
-
+            return person;
         }
         else
         {
@@ -66,11 +63,12 @@ public class Person_View {
         {
             e.printStackTrace();
         }
+        return null;
     }
 
     public static Person getFromEmail()
     {
-
+        return null;
     }
 }
 

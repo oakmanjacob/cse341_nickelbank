@@ -4,6 +4,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.sql.Date;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.regex.Pattern;
 
 public class IOManager {
@@ -52,11 +54,45 @@ public class IOManager {
         }
     }
 
+    public static Date getInputBirthDate()
+    {
+        Date date = getInputDate();
+        Calendar cal = new GregorianCalendar();
+        cal.add(Calendar.DATE, -1);
+        Date yesterday = new Date(cal.getTimeInMillis());
+        cal.add(Calendar.YEAR, -200);
+        Date old = new Date(cal.getTimeInMillis());
+
+        if (date.equals(yesterday))
+        {
+            System.out.println("Look, we weren't born yesterday, and neither were you.");
+            System.out.println("Re-input your birth date of the form YYYY-MM-DD.");
+            return IOManager.getInputBirthDate();
+        }
+        else if (date.after(yesterday) || date.before(old))
+        {
+            return date;
+        }
+        else
+        {
+            System.out.println("Invalid birth date, re-input your birth date of the form YYYY-MM-DD.");
+            return IOManager.getInputBirthDate();
+        }
+    }
+
     public static Date getInputDate()
     {
         String input = getInputString();
-        Date date
+        Date date = Date.valueOf(input);
 
+        if (date != null)
+        {
+            return date;
+        }
+        else
+        {
+            return IOManager.getInputDate();
+        }
     }
 
     public static String getInputStringLower() {
