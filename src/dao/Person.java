@@ -2,14 +2,12 @@ package dao;
 
 import util.DBManager;
 
-import java.sql.Connection;
-import java.sql.Date;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import javax.xml.transform.Result;
+import java.sql.*;
 
 public class Person {
 
-    private int account_id;
+    private long person_id;
 
     private String first_name;
     private String last_name;
@@ -22,26 +20,45 @@ public class Person {
     public boolean save()
     {
         Connection conn = DBManager.getConnection();
-        String query = connected ? "replace" : "insert";
-        query += "into person (first_name, last_name, email, phone, birth_date) values (?, ?, ?, ?, ?)";
 
-        try (
-                PreparedStatement ps = conn.prepareStatement(query);
-        ) {
-            //ps.setString(1, table_name);
-            ps.setString(3, first_name);
-            ps.setString(4, last_name);
-            ps.setString(5, email);
-            ps.setString(6, phone);
-            ps.setDate(7, birth_date);
+        if (!connected) {
+            String query = "insert into person" +
+                    "(first_name, last_name, email, phone, birth_date)" +
+                    "values (?, ?, ?, ?, ?)";
+            try (
+                    PreparedStatement ps = conn.prepareStatement(query);
+            ) {
+                //ps.setString(1, table_name);
+                ps.setString(3, this.first_name);
+                ps.setString(4, this.last_name);
+                ps.setString(5, this.email);
+                ps.setString(6, this.phone);
+                ps.setDate(7, this.birth_date);
 
-            ps.execute();
+                if (ps.executeUpdate() == 0) {
+                    return false;
+                }
+            } catch (SQLException e) {
+                return false;
+            }
+
+            try (
+                    PreparedStatement ps = conn.prepareStatement("SELECT person_id FROM person WHERE email = ?");
+            ) {
+                ps.setString(1, email);
+                ResultSet result = ps.executeQuery();
+                if (!result.next()) {
+                    return false;
+                } else {
+                    this.person_id = result.getLong("person_id");
+                    this.connected = true;
+                }
+            } catch (SQLException e) {
+                return false;
+            }
+
+            return true;
         }
-        catch (SQLException e)
-        {
-
-        }
-
         return false;
     }
 
@@ -49,8 +66,6 @@ public class Person {
     {
         return false;
     }
-
-
 
     // Getters and setters
 

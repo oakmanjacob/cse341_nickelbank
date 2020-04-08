@@ -49,7 +49,7 @@ public class IOManager {
         }
         else
         {
-            System.out.println("It appears the phone number you entered is not valid. Remember to include your area code");
+            System.out.println("It appears the phone number you entered is not valid. Remember to include your area code and try again");
             return IOManager.getInputStringPhone();
         }
     }
@@ -58,7 +58,7 @@ public class IOManager {
     {
         Date date = getInputDate();
         Calendar cal = new GregorianCalendar();
-        cal.add(Calendar.DATE, -1);
+        cal.add(Calendar.DAY_OF_MONTH, -1);
         Date yesterday = new Date(cal.getTimeInMillis());
         cal.add(Calendar.YEAR, -200);
         Date old = new Date(cal.getTimeInMillis());
@@ -66,10 +66,10 @@ public class IOManager {
         if (date.equals(yesterday))
         {
             System.out.println("Look, we weren't born yesterday, and neither were you.");
-            System.out.println("Re-input your birth date of the form YYYY-MM-DD.");
+            System.out.println("Re-input your birth date of the form MM/DD/YYYY.");
             return IOManager.getInputBirthDate();
         }
-        else if (date.after(yesterday) || date.before(old))
+        else if (date.before(yesterday) && date.after(old))
         {
             return date;
         }
@@ -83,14 +83,23 @@ public class IOManager {
     public static Date getInputDate()
     {
         String input = getInputString();
-        Date date = Date.valueOf(input);
 
-        if (date != null)
-        {
-            return date;
+        try {
+            Date date = Date.valueOf(input);
+
+            if (date != null)
+            {
+                return date;
+            }
+            else
+            {
+                System.out.println("Invalid birth date, re-input your birth date of the form YYYY-MM-DD.");
+                return IOManager.getInputDate();
+            }
         }
-        else
+        catch (IllegalArgumentException e)
         {
+            System.out.println("Invalid birth date, re-input your birth date of the form YYYY-MM-DD.");
             return IOManager.getInputDate();
         }
     }
