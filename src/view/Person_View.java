@@ -32,7 +32,13 @@ public class Person_View {
         else
         {
             System.out.println("Something went wrong, the email entered may have already been used for a different account!");
-            return null;
+            if (IOManager.yesNo("Do you wish to try again? (Y)es, (N)o"))
+            {
+                return Person_View.signup();
+            }
+            else {
+                return null;
+            }
         }
     }
 
@@ -56,9 +62,6 @@ public class Person_View {
             ps.setString(1, name);
 
             ResultSet result = ps.executeQuery();
-
-
-
         }
         catch (SQLException e)
         {

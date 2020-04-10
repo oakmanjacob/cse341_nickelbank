@@ -1,5 +1,7 @@
 package util;
 
+import view.Person_View;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -116,6 +118,23 @@ public class IOManager {
         } catch (IOException e) {
             System.out.println("Something went wrong with your input, please try again!");
             return IOManager.getInputString();
+        }
+    }
+
+    public static boolean yesNo(String message)
+    {
+        System.out.println(message);
+        String input = IOManager.getInputStringLower();
+
+        switch (input) {
+            case "y":
+            case "yes":
+                return true;
+            case "n":
+            case "no":
+                return false;
+            default:
+                return yesNo(message);
         }
     }
 }

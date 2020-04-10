@@ -1,5 +1,6 @@
 package dao;
 
+import oracle.jdbc.OraclePreparedStatement;
 import util.DBManager;
 import java.sql.*;
 
@@ -22,41 +23,39 @@ public class Person {
         if (!connected) {
             String query = "insert into person" +
                     "(first_name, last_name, email, phone, birth_date)" +
-                    "values (?, ?, ?, ?, ?)";
+                    "values (?, ?, ?, ?, ?) returning person_id into ?";
             try (
-                    PreparedStatement ps = conn.prepareStatement(query);
+                    OraclePreparedStatement ps = (OraclePreparedStatement)conn.prepareStatement(query);
             ) {
+                conn.setAutoCommit(false);
                 //ps.setString(1, table_name);
                 ps.setString(1, this.first_name);
                 ps.setString(2, this.last_name);
                 ps.setString(3, this.email);
                 ps.setString(4, this.phone);
                 ps.setDate(5, this.birth_date);
+                ps.registerReturnParameter(6, Types.NUMERIC);
 
                 if (ps.executeUpdate() == 0) {
                     return false;
                 }
-            } catch (SQLException e) {
-                e.printStackTrace();
-                return false;
-            }
 
-            try (
-                    PreparedStatement ps = conn.prepareStatement("SELECT person_id FROM person WHERE email = ?");
-            ) {
-                ps.setString(1, email);
-                ResultSet result = ps.executeQuery();
-                if (!result.next()) {
-                    return false;
-                } else {
-                    this.person_id = result.getLong("person_id");
-                    this.connected = true;
+                ResultSet rs = ps.getReturnResultSet();
+
+                if (rs != null && rs.next()) {
+                    this.person_id = rs.getLong(1);
                 }
+                else
+                {
+                    throw new SQLException("Row possibly not inserted or something");
+                }
+                conn.commit();
+                conn.setAutoCommit(true);
             } catch (SQLException e) {
                 e.printStackTrace();
                 return false;
             }
-
+            this.connected = true;
             return true;
         }
         return false;

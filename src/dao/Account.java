@@ -1,5 +1,6 @@
 package dao;
 
+import oracle.jdbc.OraclePreparedStatement;
 import util.DBManager;
 
 import java.sql.*;
@@ -13,39 +14,15 @@ public class Account {
     private double min_balance;
     private Timestamp created;
 
-    private boolean saveTimestamp = false;
+    private boolean connected;
+
+    public Account() {
+
+    }
 
     public Account(String type) {
         this.account_id = 0;
         this.type = type;
-    }
-
-    public Account(long account_id) {
-        Connection conn = DBManager.getConnection();
-        String sql = "select * from account where account_id = ?;";
-
-        try (
-                PreparedStatement ps = conn.prepareStatement(sql);
-        ) {
-            ps.setLong(1, account_id);
-            ResultSet rs = ps.executeQuery();
-
-            this.account_id = rs.getLong("account_id");
-            this.account_number = rs.getLong("account_number");
-            this.type = rs.getString("type");
-            this.interest_rate = rs.getDouble("interest_rate");
-            this.min_balance = rs.getDouble("min_balance");
-            this.created = rs.getTimestamp("created");
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-    }
-
-    public void setCreated(Timestamp created)
-    {
-        this.created = created;
-        this.saveTimestamp = true;
     }
 
     /**
@@ -61,47 +38,90 @@ public class Account {
     public boolean save() {
         Connection conn = DBManager.getConnection();
 
-        if (account_id == 0) {
-
-            String field = this.type.equals("savings") ? "interest_rate" : "min_balance";
-            String sql;
-
-            if (this.saveTimestamp)
-            {
-                sql = "insert into account (type, " + field + ", created)" +
-                        "values (?, ?, ?)";
-            }
-            else {
-                sql = "insert into account (type, " + field + ")" +
-                        "values (?, ?)";
-            }
-
+        if (!connected) {
+            String query = "insert into account" +
+                    "(type, interest_rate, min_balance)" +
+                    "values (?, ?, ?) returning (account_id, account_number) into (?, ?)";
             try (
-                    PreparedStatement ps = conn.prepareStatement(sql);
+                    OraclePreparedStatement ps = (OraclePreparedStatement)conn.prepareStatement(query);
             ) {
+                conn.setAutoCommit(false);
+                //ps.setString(1, table_name);
                 ps.setString(1, this.type);
+                ps.setDouble(2, this.interest_rate);
+                ps.setDouble(3, this.min_balance);
+                ps.registerReturnParameter(4, Types.NUMERIC);
+                ps.registerReturnParameter(5, Types.NUMERIC);
 
-                if (this.type.equals("savings")) {
-                    ps.setDouble(2, this.interest_rate);
-                }
-                else {
-                    ps.setDouble(2, this.min_balance);
+                if (ps.executeUpdate() == 0) {
+                    return false;
                 }
 
-                if (this.saveTimestamp)
+                ResultSet rs = ps.getReturnResultSet();
+
+                if (rs != null && rs.next()) {
+                    this.account_id = rs.getLong(1);
+                    this.account_number = rs.getLong(2);
+                }
+                else
                 {
-                    ps.setTimestamp(3, created);
+                    throw new SQLException("Row possibly not inserted or something");
                 }
 
-                ps.execute();
+                conn.commit();
+                conn.setAutoCommit(true);
             } catch (SQLException e) {
                 e.printStackTrace();
                 return false;
             }
 
-            this.saveTimestamp = false;
+            this.connected = true;
             return true;
         }
         return false;
+    }
+
+    public long getAccountId() {
+        return account_id;
+    }
+
+    public void setAccountId(long account_id) {
+        this.account_id = account_id;
+    }
+
+    public long getAccountNumber() {
+        return account_number;
+    }
+
+    public void setAccountNumber(long account_number) {
+        this.account_number = account_number;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public double getInterestRate() {
+        return interest_rate;
+    }
+
+    public void setInterestRate(double interest_rate) {
+        this.interest_rate = interest_rate;
+    }
+
+    public double getMinBalance() {
+        return min_balance;
+    }
+
+    public void setMinBalance(double min_balance) {
+        this.min_balance = min_balance;
+    }
+
+    public Timestamp getCreated() {
+        return created;
     }
 }
