@@ -1,8 +1,8 @@
 REM INSERTING into JCO222.BRANCH
 SET DEFINE OFF;
-Insert into JCO222.BRANCH (BRANCH_ID,ADDRESS_ID,TYPE) values (5,15,'full');
-Insert into JCO222.BRANCH (BRANCH_ID,ADDRESS_ID,TYPE) values (6,16,'full');
-Insert into JCO222.BRANCH (BRANCH_ID,ADDRESS_ID,TYPE) values (1,17,'atm');
-Insert into JCO222.BRANCH (BRANCH_ID,ADDRESS_ID,TYPE) values (2,18,'full');
-Insert into JCO222.BRANCH (BRANCH_ID,ADDRESS_ID,TYPE) values (3,19,'atm');
-Insert into JCO222.BRANCH (BRANCH_ID,ADDRESS_ID,TYPE) values (4,20,'full');
+Insert into JCO222.BRANCH (ADDRESS_ID,TYPE) values (17,'atm');
+Insert into JCO222.BRANCH (ADDRESS_ID,TYPE) values (18,'full');
+Insert into JCO222.BRANCH (ADDRESS_ID,TYPE) values (19,'atm');
+Insert into JCO222.BRANCH (ADDRESS_ID,TYPE) values (20,'full');
+Insert into JCO222.BRANCH (ADDRESS_ID,TYPE) values (15,'full');
+Insert into JCO222.BRANCH (ADDRESS_ID,TYPE) values (16,'full');

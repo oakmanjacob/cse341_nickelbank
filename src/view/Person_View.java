@@ -25,16 +25,15 @@ public class Person_View {
         System.out.println("Please input your birth data in the form YYYY-MM-DD");
         person.setBirthDate(IOManager.getInputBirthDate());
 
-//        if (person.save())
-//        {
-//            return person;
-//        }
-//        else
-//        {
-//            return Person_View.signup();
-//        }
-
-        return null;
+        if (person.save())
+        {
+            return person;
+        }
+        else
+        {
+            System.out.println("Something went wrong, the email entered may have already been used for a different account!");
+            return null;
+        }
     }
 
     public static Person getFromName()

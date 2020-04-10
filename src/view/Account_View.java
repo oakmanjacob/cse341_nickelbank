@@ -33,7 +33,7 @@ public class Account_View {
     public static void getOpenAccountView()
     {
         System.out.println("Let's start the account creation process!");
-        Person person;
+        Person person = null;
         boolean section1 = false;
 
         while (!section1) {
@@ -58,6 +58,10 @@ public class Account_View {
             }
         }
 
+        if (person == null)
+        {
+            return;
+        }
 
         System.out.println("What type of account do you wish to create?");
     }

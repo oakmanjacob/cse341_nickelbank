@@ -1,8 +1,6 @@
 package dao;
 
 import util.DBManager;
-
-import javax.xml.transform.Result;
 import java.sql.*;
 
 public class Person {
@@ -29,16 +27,17 @@ public class Person {
                     PreparedStatement ps = conn.prepareStatement(query);
             ) {
                 //ps.setString(1, table_name);
-                ps.setString(3, this.first_name);
-                ps.setString(4, this.last_name);
-                ps.setString(5, this.email);
-                ps.setString(6, this.phone);
-                ps.setDate(7, this.birth_date);
+                ps.setString(1, this.first_name);
+                ps.setString(2, this.last_name);
+                ps.setString(3, this.email);
+                ps.setString(4, this.phone);
+                ps.setDate(5, this.birth_date);
 
                 if (ps.executeUpdate() == 0) {
                     return false;
                 }
             } catch (SQLException e) {
+                e.printStackTrace();
                 return false;
             }
 
@@ -54,6 +53,7 @@ public class Person {
                     this.connected = true;
                 }
             } catch (SQLException e) {
+                e.printStackTrace();
                 return false;
             }
 

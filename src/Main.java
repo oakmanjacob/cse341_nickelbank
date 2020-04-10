@@ -1,3 +1,5 @@
+import init.Init;
+import util.DBManager;
 import util.IOManager;
 import view.Account_View;
 import view.Bank_View;
@@ -18,25 +20,26 @@ public class Main {
     };
 
     public static void main(String[] args) {
-//        DBManager dbManager = new DBManager();
-//        dbManager.connect();
+        DBManager dbManager = new DBManager();
+        dbManager.connect();
+        Init.dropAllTable();
 
-        System.out.println(" $$\\   $$\\ $$\\           $$\\                 $$\\       $$$$$$$\\                      $$\\       \n" +
-                " $$$\\  $$ |\\__|          $$ |                $$ |      $$  __$$\\                     $$ |      \n" +
-                " $$$$\\ $$ |$$\\  $$$$$$$\\ $$ |  $$\\  $$$$$$\\  $$ |      $$ |  $$ | $$$$$$\\  $$$$$$$\\  $$ |  $$\\ \n" +
-                " $$ $$\\$$ |$$ |$$  _____|$$ | $$  |$$  __$$\\ $$ |      $$$$$$$\\ | \\____$$\\ $$  __$$\\ $$ | $$  |\n" +
-                " $$ \\$$$$ |$$ |$$ /      $$$$$$  / $$$$$$$$ |$$ |      $$  __$$\\  $$$$$$$ |$$ |  $$ |$$$$$$  / \n" +
-                " $$ |\\$$$ |$$ |$$ |      $$  _$$<  $$   ____|$$ |      $$ |  $$ |$$  __$$ |$$ |  $$ |$$  _$$<  \n" +
-                " $$ | \\$$ |$$ |\\$$$$$$$\\ $$ | \\$$\\ \\$$$$$$$\\ $$ |      $$$$$$$  |\\$$$$$$$ |$$ |  $$ |$$ | \\$$\\ \n" +
-                " \\__|  \\__|\\__| \\_______|\\__|  \\__| \\_______|\\__|      \\_______/  \\_______|\\__|  \\__|\\__|  \\__|");
+//        System.out.println(" $$\\   $$\\ $$\\           $$\\                 $$\\       $$$$$$$\\                      $$\\       \n" +
+//                " $$$\\  $$ |\\__|          $$ |                $$ |      $$  __$$\\                     $$ |      \n" +
+//                " $$$$\\ $$ |$$\\  $$$$$$$\\ $$ |  $$\\  $$$$$$\\  $$ |      $$ |  $$ | $$$$$$\\  $$$$$$$\\  $$ |  $$\\ \n" +
+//                " $$ $$\\$$ |$$ |$$  _____|$$ | $$  |$$  __$$\\ $$ |      $$$$$$$\\ | \\____$$\\ $$  __$$\\ $$ | $$  |\n" +
+//                " $$ \\$$$$ |$$ |$$ /      $$$$$$  / $$$$$$$$ |$$ |      $$  __$$\\  $$$$$$$ |$$ |  $$ |$$$$$$  / \n" +
+//                " $$ |\\$$$ |$$ |$$ |      $$  _$$<  $$   ____|$$ |      $$ |  $$ |$$  __$$ |$$ |  $$ |$$  _$$<  \n" +
+//                " $$ | \\$$ |$$ |\\$$$$$$$\\ $$ | \\$$\\ \\$$$$$$$\\ $$ |      $$$$$$$  |\\$$$$$$$ |$$ |  $$ |$$ | \\$$\\ \n" +
+//                " \\__|  \\__|\\__| \\_______|\\__|  \\__| \\_______|\\__|      \\_______/  \\_______|\\__|  \\__|\\__|  \\__|");
+//
+//        Random rand = new Random();
+//        System.out.println("\n\nWelcome to Nickel Bank, \"" + slogans[rand.nextInt(slogans.length)] + "\"");
+//        System.out.println("What can we help you with today?");
 
-        Random rand = new Random();
-        System.out.println("\n\nWelcome to Nickel Bank, \"" + slogans[rand.nextInt(slogans.length)] + "\"");
-        System.out.println("What can we help you with today?");
+//        Main.dashboard();
 
-        Main.dashboard();
-
-//        dbManager.disconnect();
+        dbManager.disconnect();
     }
 
     public static void dashboard()
