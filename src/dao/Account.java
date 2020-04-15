@@ -1,12 +1,13 @@
 package dao;
 
 import oracle.jdbc.OraclePreparedStatement;
+import oracle.jdbc.proxy.annotation.Pre;
 import util.DBManager;
 
 import java.sql.*;
+import java.util.ArrayList;
 
 public class Account {
-    private static final String table_name = "account";
     private long account_id;
     private long account_number;
     private String type;
@@ -14,15 +15,17 @@ public class Account {
     private double min_balance;
     private Timestamp created;
 
+    private ArrayList<Person> owners;
+
     private boolean connected;
 
     public Account() {
-
+        this.owners = new ArrayList<Person>();
     }
 
     public Account(String type) {
-        this.account_id = 0;
         this.type = type;
+        this.owners = new ArrayList<Person>();
     }
 
     /**
@@ -41,12 +44,11 @@ public class Account {
         if (!connected) {
             String query = "insert into account" +
                     "(type, interest_rate, min_balance)" +
-                    "values (?, ?, ?) returning (account_id, account_number) into (?, ?)";
+                    "values (?, ?, ?) returning account_id, account_number into ?, ?";
             try (
                     OraclePreparedStatement ps = (OraclePreparedStatement)conn.prepareStatement(query);
             ) {
                 conn.setAutoCommit(false);
-                //ps.setString(1, table_name);
                 ps.setString(1, this.type);
                 ps.setDouble(2, this.interest_rate);
                 ps.setDouble(3, this.min_balance);
@@ -66,6 +68,16 @@ public class Account {
                 else
                 {
                     throw new SQLException("Row possibly not inserted or something");
+                }
+
+                for (Person person : this.owners) {
+                    PreparedStatement join = conn.prepareStatement("insert into person_account " +
+                            "(person_id, account_id) values (?, ?)");
+
+                    join.setLong(1, person.getPersonId());
+                    join.setLong(2, this.account_id);
+
+                    join.executeUpdate();
                 }
 
                 conn.commit();
@@ -123,5 +135,10 @@ public class Account {
 
     public Timestamp getCreated() {
         return created;
+    }
+
+    public void addPerson(Person person)
+    {
+        this.owners.add(person);
     }
 }

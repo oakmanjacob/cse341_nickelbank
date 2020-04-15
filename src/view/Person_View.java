@@ -12,10 +12,15 @@ import java.sql.*;
 public class Person_View {
     public static Person signup()
     {
+        System.out.println("Please input your email address.");
+        return signup(IOManager.getInputStringEmail());
+    }
+
+    public static Person signup(String email)
+    {
         Person person = new Person();
 
-        System.out.println("Please input your email address.");
-        person.setEmail(IOManager.getInputStringEmail());
+        person.setEmail(email);
         System.out.println("Please input your first name.");
         person.setFirstName(IOManager.getInputString());
         System.out.println("Please input your last name.");
@@ -31,7 +36,7 @@ public class Person_View {
         }
         else
         {
-            System.out.println("Something went wrong, the email entered may have already been used for a different account!");
+            System.out.println("Something went wrong, the email entered may have already been used for a different person!");
             if (IOManager.yesNo("Do you wish to try again? (Y)es, (N)o"))
             {
                 return Person_View.signup();
@@ -42,37 +47,30 @@ public class Person_View {
         }
     }
 
-    public static Person getFromName()
-    {
-        Connection conn = DBManager.getConnection();
-        System.out.println("Please input your full name.");
-
-        String name = IOManager.getInputString();
-
-        try {
-            PreparedStatement ps = conn.prepareStatement(
-                    "SELECT\n" +
-                    "    person_id, first_name, last_name, birth_date\n" +
-                    "FROM\n" +
-                    "    person\n" +
-                    "WHERE\n" +
-                    "    LOWER(CONCAT(first_name, ' ', last_name) LIKE LOWER(?)" +
-                    "LIMIT 10");
-
-            ps.setString(1, name);
-
-            ResultSet result = ps.executeQuery();
-        }
-        catch (SQLException e)
-        {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
     public static Person getFromEmail()
     {
-        return null;
+        Connection conn = DBManager.getConnection();
+        System.out.println("Please input your email.");
+
+        String email = IOManager.getInputStringEmail();
+        Person person = Person.fromEmail(email);
+
+        if (person == null)
+        {
+            if (IOManager.yesNo("We can't find a person with the email address " + email + " Do you wish to try again? (Y)es, (N)o"))
+            {
+                return getFromEmail();
+            }
+
+            if (IOManager.yesNo("Do you wish to instead sign up a new person with the email address " + email + "? (Y)es, (N)o"))
+            {
+                return signup(email);
+            }
+
+            return null;
+        }
+
+        return person;
     }
 }
 

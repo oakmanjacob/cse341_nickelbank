@@ -137,4 +137,24 @@ public class IOManager {
                 return yesNo(message);
         }
     }
+
+    public static char yesNoCancel(String message)
+    {
+        System.out.println(message);
+        String input = IOManager.getInputStringLower();
+
+        switch (input) {
+            case "n":
+            case "no":
+                return 'n';
+            case "y":
+            case "yes":
+                return 'y';
+            case "c":
+            case "cancel":
+                return 'c';
+            default:
+                return yesNoCancel(message);
+        }
+    }
 }

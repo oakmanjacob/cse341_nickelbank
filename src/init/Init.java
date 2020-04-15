@@ -117,11 +117,11 @@ public class Init {
                     "begin\n" +
                     "\tif :n.account_number is null then\n" +
                     "\t\twhile in_table != 0\n" +
-                    "\t\t\tloop\n" +
-                    "\t\t\t\tselect round(dbms_random.value(100000000000, 999999999999)) into account_num from dual;\n" +
-                    "\t\t\t\tselect count(*) into in_table from account where account_number = account_num;\n" +
-                    "\t\t\tend loop;\n" +
-                    "\t\t\t:n.account_number := account_num;\n" +
+                    "\t\tloop\n" +
+                    "\t\t\tselect round(dbms_random.value(100000000000, 999999999999)) into account_num from dual;\n" +
+                    "\t\t\tselect count(*) into in_table from account where account_number = account_num;\n" +
+                    "\t\tend loop;\n" +
+                    "\t\t:n.account_number := account_num;\n" +
                     "\tend if;\n" +
                     "end;");
 
@@ -135,10 +135,10 @@ public class Init {
                     "begin\n" +
                     "\tif :n.card_number is null then\n" +
                     "\t\twhile in_table != 0\n" +
-                    "\t\t\tloop\n" +
-                    "\t\t\t\tselect round(dbms_random.value(1000000000000000, 9999999999999999)) into card_num from dual;\n" +
-                    "\t\t\t\tselect count(*) into in_table from card where card_number = card_num;\n" +
-                    "\t\t\tend loop;\n" +
+                    "\t\tloop\n" +
+                    "\t\t\tselect round(dbms_random.value(1000000000000000, 9999999999999999)) into card_num from dual;\n" +
+                    "\t\t\tselect count(*) into in_table from card where card_number = card_num;\n" +
+                    "\t\tend loop;\n" +
                     "\t\t:n.card_number := card_num;\n" +
                     "\tend if;\n" +
                     "end;");

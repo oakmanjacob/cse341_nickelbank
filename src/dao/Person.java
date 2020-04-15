@@ -2,6 +2,8 @@ package dao;
 
 import oracle.jdbc.OraclePreparedStatement;
 import util.DBManager;
+import util.IOManager;
+
 import java.sql.*;
 
 public class Person {
@@ -16,6 +18,21 @@ public class Person {
 
     private boolean connected;
 
+    public Person()
+    {
+        connected = false;
+    }
+
+    public Person(long person_id, String first_name, String last_name, String email, String phone, Date birth_date)
+    {
+        this.connected = true;
+        this.person_id = person_id;
+        this.first_name = first_name;
+        this.last_name = last_name;
+        this.email = email;
+        this.birth_date = birth_date;
+    }
+
     public boolean save()
     {
         Connection conn = DBManager.getConnection();
@@ -27,7 +44,6 @@ public class Person {
             try (
                     OraclePreparedStatement ps = (OraclePreparedStatement)conn.prepareStatement(query);
             ) {
-                conn.setAutoCommit(false);
                 //ps.setString(1, table_name);
                 ps.setString(1, this.first_name);
                 ps.setString(2, this.last_name);
@@ -49,8 +65,6 @@ public class Person {
                 {
                     throw new SQLException("Row possibly not inserted or something");
                 }
-                conn.commit();
-                conn.setAutoCommit(true);
             } catch (SQLException e) {
                 e.printStackTrace();
                 return false;
@@ -61,12 +75,53 @@ public class Person {
         return false;
     }
 
+    public static Person fromEmail(String email)
+    {
+        Connection conn = DBManager.getConnection();
+        Person person = null;
+
+        try {
+            PreparedStatement ps = conn.prepareStatement(
+            "SELECT\n" +
+                    "    person_id, first_name, last_name, email, phone, birth_date\n" +
+                    "FROM\n" +
+                    "    person\n" +
+                    "WHERE\n" +
+                    "    LOWER(email) = LOWER(?)");
+
+            ps.setString(1, email);
+
+            ResultSet result = ps.executeQuery();
+
+            if (result != null && result.next()) {
+                person = new Person(
+                    result.getLong("person_id"),
+                    result.getString("first_name"),
+                    result.getString("last_name"),
+                    result.getString("email"),
+                    result.getString("phone"),
+                    result.getDate("birth_date"));
+            }
+            else {
+                return null;
+            }
+        }
+        catch (SQLException e)
+        {
+            e.printStackTrace();
+        }
+
+        return person;
+    }
+
     public boolean delete()
     {
         return false;
     }
 
     // Getters and setters
+
+    public long getPersonId() { return connected ? this.person_id : 0; }
 
     public String getFirstName() {
         return first_name;
