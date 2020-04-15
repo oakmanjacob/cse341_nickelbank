@@ -6,6 +6,7 @@ import util.DBManager;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.List;
 
 public class Account {
     private long account_id;
@@ -26,6 +27,17 @@ public class Account {
     public Account(String type) {
         this.type = type;
         this.owners = new ArrayList<Person>();
+    }
+
+    public Account(long account_id, long account_number, String type, double interest_rate, double min_balance, Timestamp created)
+    {
+        this.connected = true;
+
+        this.account_id = account_id;
+        this.account_number = account_number;
+        this.type = type;
+        this.interest_rate = interest_rate;
+        this.min_balance = min_balance;
     }
 
     /**
@@ -93,6 +105,109 @@ public class Account {
         return false;
     }
 
+    public static Account fromNumber(long account_number)
+    {
+        Connection conn = DBManager.getConnection();
+        Account account = null;
+
+        try {
+            PreparedStatement ps = conn.prepareStatement(
+                    "SELECT * FROM account WHERE account_number = ?");
+
+            ps.setLong(1, account_number);
+
+            ResultSet result = ps.executeQuery();
+
+            if (result != null && result.next()) {
+                account = new Account(
+                        result.getLong("account_id"),
+                        result.getLong("account_number"),
+                        result.getString("type"),
+                        result.getDouble("interest_rate"),
+                        result.getDouble("min_balance"),
+                        result.getTimestamp("created")
+                );
+            }
+            else {
+                return null;
+            }
+        }
+        catch (SQLException e)
+        {
+            e.printStackTrace();
+        }
+
+        return account;
+    }
+
+    public static Account fromDebitCard(long card_number)
+    {
+        Connection conn = DBManager.getConnection();
+        Account account = null;
+
+        try {
+            PreparedStatement ps = conn.prepareStatement(
+                    "SELECT a.* FROM card c INNER JOIN card_debit cd ON c.card_id = cd.card_id INNER JOIN account a ON cd.account_id = a.account_id WHERE c.card_number = ?");
+
+            ps.setLong(1, card_number);
+
+            ResultSet result = ps.executeQuery();
+
+            if (result != null && result.next()) {
+                account = new Account(
+                        result.getLong("account_id"),
+                        result.getLong("account_number"),
+                        result.getString("type"),
+                        result.getDouble("interest_rate"),
+                        result.getDouble("min_balance"),
+                        result.getTimestamp("created"));
+            }
+            else {
+                return null;
+            }
+        }
+        catch (SQLException e)
+        {
+            e.printStackTrace();
+        }
+
+        return account;
+    }
+
+    public static List<Account> getAllFromEmail(String email)
+    {
+        Connection conn = DBManager.getConnection();
+        List<Account> account_list = new ArrayList<Account>();
+
+        try {
+            PreparedStatement ps = conn.prepareStatement(
+                    "SELECT a.* FROM person p INNER JOIN person_account pa ON p.person_id = pa.person_id INNER JOIN account a ON pa.account_id = a.account_id WHERE p.email = ?");
+
+            ps.setString(1, email);
+
+            ResultSet result = ps.executeQuery();
+
+            if (result != null && result.next()) {
+                do {
+                    account_list.add(new Account(
+                            result.getLong("account_id"),
+                            result.getLong("account_number"),
+                            result.getString("type"),
+                            result.getDouble("interest_rate"),
+                            result.getDouble("min_balance"),
+                            result.getTimestamp("created")));
+                }
+                while (result.next());
+            }
+        }
+        catch (SQLException e)
+        {
+            e.printStackTrace();
+        }
+
+        return account_list;
+    }
+
     public long getAccountId() {
         return account_id;
     }
@@ -103,6 +218,11 @@ public class Account {
 
     public long getAccountNumber() {
         return account_number;
+    }
+
+    public long getLastFour()
+    {
+        return account_number % 10000;
     }
 
     public void setAccountNumber(long account_number) {

@@ -49,7 +49,6 @@ public class Person_View {
 
     public static Person getFromEmail()
     {
-        Connection conn = DBManager.getConnection();
         System.out.println("Please input your email.");
 
         String email = IOManager.getInputStringEmail();

@@ -4,7 +4,11 @@ import dao.Account;
 import dao.Person;
 import util.IOManager;
 
+import java.util.List;
+
 public class Account_View {
+    public static Account last_account = null;
+
     public static void getView() {
         while (true) {
             System.out.println("Account Management");
@@ -98,6 +102,16 @@ public class Account_View {
 
             System.out.println("Account successfully created! your new account number is " +  account.getAccountNumber() + "\n\n");
         }
+
+        cacheAccount(account);
+    }
+
+    public static void cacheAccount(Account account)
+    {
+        if (IOManager.yesNo("Should we keep this account handy for a bit? (Y)es, (N)o")) {
+            System.out.println("We'll keep it nearby then!");
+            last_account = account;
+        }
     }
 
     public static Account createSavingsAccount()
@@ -169,7 +183,96 @@ public class Account_View {
     }
 
     public static void getDepositView() {
+        Account account = null;
 
+        if (last_account != null && IOManager.yesNo(
+                "We have an account ending in " + last_account.getLastFour() + " handy, is this the account you want?")) {
+            account = last_account;
+        }
+        else {
+            account = getAccount();
+        }
+
+        if (account == null)
+        {
+            System.out.println("Canceling deposit process.");
+            return;
+        }
+
+
+    }
+
+    public static Account getAccount()
+    {
+        System.out.println("Would you like to access your account via (A)ccount number, (D)ebit card or (L)ookup an account?");
+        String input = IOManager.getInputStringLower();
+
+        switch (input)
+        {
+            case "a":
+            case "number":
+            case "account number":
+                return getFromNumber();
+            case "d":
+            case "debit":
+            case "debit card":
+                return getFromCard();
+            case "l":
+            case "lookup":
+                return getFromLookup();
+            default:
+                return getAccount();
+        }
+    }
+
+    public static Account getFromNumber()
+    {
+        System.out.println("Please input your account number.");
+
+        long account_number = IOManager.getInputLong(100000000000l, 999999999999l);
+        Account account = Account.fromNumber(account_number);
+
+        if (account == null)
+        {
+            if (IOManager.yesNo("We can't find an account with the number " + account_number + " Do you wish to try again? (Y)es, (N)o"))
+            {
+                return getFromNumber();
+            }
+
+            return null;
+        }
+
+        return account;
+    }
+
+    public static Account getFromCard()
+    {
+        System.out.println("Please input your account number.");
+
+        long card_number = IOManager.getInputLong(1000000000000000l, 9999999999999999l);
+        Account account = Account.fromNumber(card_number);
+
+        if (account == null)
+        {
+            if (IOManager.yesNo("We can't find an account with the debit card number " + card_number + " Do you wish to try again? (Y)es, (N)o"))
+            {
+                return getFromCard();
+            }
+
+            return null;
+        }
+
+        return account;
+    }
+
+    public static Account getFromLookup()
+    {
+        String email = IOManager.getInputStringEmail();
+
+        List<Account> account_list = Account.getAllFromEmail(email);
+
+
+        return null;
     }
 
     public static void getWithdrawalView() {

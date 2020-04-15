@@ -12,6 +12,28 @@ import java.util.regex.Pattern;
 
 public class IOManager {
 
+    public static long getInputLong(long min, long max)
+    {
+        String input = IOManager.getInputString();
+
+        try {
+            long number = Long.parseLong(input);
+
+            if (number < min || number >= max)
+            {
+                System.out.println("The number " + number + " is not valid, please try again!");
+                return getInputLong(min, max);
+            }
+
+            return number;
+        }
+        catch (NumberFormatException e)
+        {
+            System.out.println("The number you entered is formatted incorrectly, please try again");
+            return getInputLong(min, max);
+        }
+    }
+
     public static String getInputStringEmail() {
         String email = IOManager.getInputString();
 
