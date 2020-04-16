@@ -16,6 +16,8 @@ public class Account {
     private double min_balance;
     private Timestamp created;
 
+    private double balance;
+
     private ArrayList<Person> owners;
 
     private boolean connected;
@@ -29,7 +31,7 @@ public class Account {
         this.owners = new ArrayList<Person>();
     }
 
-    public Account(long account_id, long account_number, String type, double interest_rate, double min_balance, Timestamp created)
+    public Account(long account_id, long account_number, String type, double balance, double interest_rate, double min_balance, Timestamp created)
     {
         this.connected = true;
 
@@ -38,16 +40,8 @@ public class Account {
         this.type = type;
         this.interest_rate = interest_rate;
         this.min_balance = min_balance;
-    }
 
-    /**
-     * Call PL/SQL function to calculate the current balance of the account
-     *
-     * @return current account balance
-     */
-    public double getBalance() {
-        // TODO implement method
-        return -1;
+        this.balance = balance;
     }
 
     public boolean save() {
@@ -112,7 +106,11 @@ public class Account {
 
         try {
             PreparedStatement ps = conn.prepareStatement(
-                    "SELECT * FROM account WHERE account_number = ?");
+                    "SELECT a.*, ab.balance " +
+                            "FROM account a " +
+                            "INNER JOIN account_balance ab " +
+                            "ON a.account_id = ab.account_id " +
+                            "WHERE a.account_number = ?");
 
             ps.setLong(1, account_number);
 
@@ -123,6 +121,7 @@ public class Account {
                         result.getLong("account_id"),
                         result.getLong("account_number"),
                         result.getString("type"),
+                        result.getDouble("balance"),
                         result.getDouble("interest_rate"),
                         result.getDouble("min_balance"),
                         result.getTimestamp("created")
@@ -147,7 +146,15 @@ public class Account {
 
         try {
             PreparedStatement ps = conn.prepareStatement(
-                    "SELECT a.* FROM card c INNER JOIN card_debit cd ON c.card_id = cd.card_id INNER JOIN account a ON cd.account_id = a.account_id WHERE c.card_number = ?");
+                    "SELECT a.*, ab.balance " +
+                            "FROM card c " +
+                            "INNER JOIN card_debit cd " +
+                            "ON c.card_id = cd.card_id " +
+                            "INNER JOIN account a " +
+                            "ON cd.account_id = a.account_id " +
+                            "INNER JOIN account_balance ab " +
+                            "ON a.account_id = ab.account_id " +
+                            "WHERE c.card_number = ?");
 
             ps.setLong(1, card_number);
 
@@ -158,6 +165,7 @@ public class Account {
                         result.getLong("account_id"),
                         result.getLong("account_number"),
                         result.getString("type"),
+                        result.getDouble("balance"),
                         result.getDouble("interest_rate"),
                         result.getDouble("min_balance"),
                         result.getTimestamp("created"));
@@ -181,7 +189,16 @@ public class Account {
 
         try {
             PreparedStatement ps = conn.prepareStatement(
-                    "SELECT a.* FROM person p INNER JOIN person_account pa ON p.person_id = pa.person_id INNER JOIN account a ON pa.account_id = a.account_id WHERE p.email = ?");
+                    "SELECT a.*, ab.balance " +
+                            "FROM person p " +
+                            "INNER JOIN person_account pa " +
+                            "ON p.person_id = pa.person_id " +
+                            "INNER JOIN account a " +
+                            "ON pa.account_id = a.account_id " +
+                            "INNER JOIN account_balance ab " +
+                            "ON a.account_id = ab.account_id " +
+                            "WHERE p.email = ? " +
+                            "ORDER BY a.created ASC");
 
             ps.setString(1, email);
 
@@ -193,6 +210,7 @@ public class Account {
                             result.getLong("account_id"),
                             result.getLong("account_number"),
                             result.getString("type"),
+                            result.getDouble("balance"),
                             result.getDouble("interest_rate"),
                             result.getDouble("min_balance"),
                             result.getTimestamp("created")));
@@ -235,6 +253,10 @@ public class Account {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public double getBalance() {
+        return this.balance;
     }
 
     public double getInterestRate() {

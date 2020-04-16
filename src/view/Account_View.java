@@ -267,10 +267,20 @@ public class Account_View {
 
     public static Account getFromLookup()
     {
+        System.out.println("Input your email address and we can give you a list of you accounts.");
         String email = IOManager.getInputStringEmail();
 
         List<Account> account_list = Account.getAllFromEmail(email);
 
+        if (account_list.size() == 0)
+        {
+
+        }
+
+        for(Account account : account_list)
+        {
+            System.out.println(account.getAccountNumber() "");
+        }
 
         return null;
     }
