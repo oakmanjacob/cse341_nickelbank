@@ -283,4 +283,9 @@ public class Account {
     {
         this.owners.add(person);
     }
+
+    public String toString()
+    {
+        return this.type.toUpperCase() + " - *********" + this.getLastFour() + " balance: $" + this.balance;
+    }
 }

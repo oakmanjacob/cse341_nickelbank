@@ -42,37 +42,38 @@ public class Main {
 
     public static void dashboard()
     {
-        System.out.println("(B)ank management, (A)ccounts, (P)urchases, (E)xit");
+        while (true) {
+            System.out.println("Banking Dashboard");
+            System.out.println("(B)ank management, (A)ccounts, (P)urchases, (E)xit");
 
-        String input = IOManager.getInputStringLower();
+            String input = IOManager.getInputStringLower();
 
-        switch (input)
-        {
-            case "b":
-            case "bank":
-            case "bank management":
-            case "manage":
-            case "management":
-                Bank_View.getView();
-                break;
-            case "a":
-            case "account":
-            case "accounts":
-                Account_View.getView();
-                break;
-            case "p" :
-            case "purchase":
-            case "purchases":
-                Purchase_View.getView();
-                break;
-            case "e" :
-            case "exit":
-            case "quit":
-                System.out.println("We hate to see you go but love to watch you walk away.");
-                break;
-            default : {
-                System.out.println("We do not have a section for \"" +  input + "\" please try again");
-                dashboard();
+            switch (input) {
+                case "b":
+                case "bank":
+                case "bank management":
+                case "manage":
+                case "management":
+                    Bank_View.getView();
+                    break;
+                case "a":
+                case "account":
+                case "accounts":
+                    Account_View.getView();
+                    break;
+                case "p":
+                case "purchase":
+                case "purchases":
+                    Purchase_View.getView();
+                    break;
+                case "e":
+                case "exit":
+                case "quit":
+                    System.out.println("We hate to see you go but love to watch you walk away.");
+                    return;
+                default: {
+                    System.out.println("We do not have a section for \"" + input + "\" please try again");
+                }
             }
         }
     }

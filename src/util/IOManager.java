@@ -1,7 +1,5 @@
 package util;
 
-import view.Person_View;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -21,7 +19,7 @@ public class IOManager {
 
             if (number < min || number >= max)
             {
-                System.out.println("The number " + number + " is not valid, please try again!");
+                System.out.println("The number " + input + " is not valid, please try again!");
                 return getInputLong(min, max);
             }
 
@@ -31,6 +29,149 @@ public class IOManager {
         {
             System.out.println("The number you entered is formatted incorrectly, please try again");
             return getInputLong(min, max);
+        }
+    }
+
+    public static int getInputInt(int min, int max)
+    {
+        String input = IOManager.getInputString();
+
+        try {
+            int number = Integer.parseInt(input);
+
+            if (number < min || number >= max)
+            {
+                System.out.println("The number " + input + " is not valid, please try again!");
+                return getInputInt(min, max);
+            }
+
+            return number;
+        }
+        catch (NumberFormatException e)
+        {
+            System.out.println("The number you entered is formatted incorrectly, please try again");
+            return getInputInt(min, max);
+        }
+    }
+
+    public static double getInputDouble(double min, double max)
+    {
+        double number = getInputDouble(min);
+
+        if (number > max)
+        {
+            System.out.println("The number " + number + " is not in the valid range, please try again!");
+            return getInputDouble(min, max);
+        }
+
+        return number;
+    }
+
+    public static double getInputDouble(double min)
+    {
+        String input = IOManager.getInputString();
+
+        try {
+            double number = Double.parseDouble(input);
+
+            if (number < min)
+            {
+                System.out.println("The number " + input + " is not in the valid range, please try again!");
+                return getInputDouble(min);
+            }
+
+            return number;
+        }
+        catch (NumberFormatException e)
+        {
+            System.out.println("The number you entered is formatted incorrectly, please try again");
+            return getInputDouble(min);
+        }
+    }
+
+    public static Object handleTable(Object[] list, int page_limit)
+    {
+        int page = 0;
+        int total_pages = (int)Math.ceil((double)list.length / page_limit);
+        boolean repeat = true;
+        while (repeat) {
+            for (int i = page_limit * page; i < list.length && i < page_limit * (page + 1); i++) {
+                System.out.println("(" + (i + 1) + ") - " + list[i].toString());
+            }
+
+            int index = -1;
+
+            if (list.length > page_limit)
+            {
+                System.out.println("Page " + (page + 1) + " of " + total_pages);
+                System.out.println("Type (N)ext or (B)ack to navigate pages or type in a number to indicate your choice");
+
+                String input = IOManager.getPageNavInput(page, page_limit, list.length);
+
+                if (input.equals("n"))
+                {
+                    page++;
+                    continue;
+                }
+                else if (input.equals("b"))
+                {
+                    page--;
+                    continue;
+                }
+                else
+                {
+                    index = Integer.parseInt(input) - 1;
+                }
+            }
+            else
+            {
+                System.out.println("Type in the number corresponding to which record you would like to choose");
+                index = IOManager.getInputInt(1, list.length + 1) - 1;
+            }
+
+            if (index >= 0 && index < list.length)
+            {
+                return list[index];
+            }
+        }
+
+        return null;
+    }
+
+    public static String getPageNavInput(int page, int page_limit, int size)
+    {
+        String input = IOManager.getInputStringLower();
+        int total_pages = (int)Math.ceil((double)size / page_limit);
+
+        switch (input)
+        {
+            case "n":
+            case "next":
+                if (page + 1 < total_pages)
+                {
+                    return "n";
+                }
+            case "b":
+            case "back":
+                if (page > 0) {
+                    return "b";
+                }
+        }
+
+        try {
+            int index = Integer.parseInt(input);
+            if (index > 0 && index <= size)
+            {
+                return "" + index;
+            }
+
+            System.out.println("The number you entered is out of the valid range, please try again.");
+            return getPageNavInput(page, page_limit, size);
+        }
+        catch (NumberFormatException e)
+        {
+            System.out.println("Your input is not valid, please try again.");
+            return getPageNavInput(page, page_limit, size);
         }
     }
 
