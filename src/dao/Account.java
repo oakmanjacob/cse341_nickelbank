@@ -9,7 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Account {
-    private long account_id;
+    private long account_id = 0;
+
     private long account_number;
     private String type;
     private double interest_rate;
@@ -19,8 +20,6 @@ public class Account {
     private double balance;
 
     private ArrayList<Person> owners;
-
-    private boolean connected;
 
     public Account() {
         this.owners = new ArrayList<Person>();
@@ -33,21 +32,18 @@ public class Account {
 
     public Account(long account_id, long account_number, String type, double balance, double interest_rate, double min_balance, Timestamp created)
     {
-        this.connected = true;
-
         this.account_id = account_id;
         this.account_number = account_number;
         this.type = type;
         this.interest_rate = interest_rate;
         this.min_balance = min_balance;
-
         this.balance = balance;
     }
 
     public boolean save() {
         Connection conn = DBManager.getConnection();
 
-        if (!connected) {
+        if (this.account_id == 0) {
             String query = "insert into account" +
                     "(type, interest_rate, min_balance)" +
                     "values (?, ?, ?) returning account_id, account_number into ?, ?";
@@ -92,8 +88,6 @@ public class Account {
                 e.printStackTrace();
                 return false;
             }
-
-            this.connected = true;
             return true;
         }
         return false;
@@ -226,12 +220,13 @@ public class Account {
         return account_list;
     }
 
-    public long getAccountId() {
-        return account_id;
+    public String toString()
+    {
+        return this.type.toUpperCase() + " - *********" + this.getLastFour() + " balance: $" + this.balance;
     }
 
-    public void setAccountId(long account_id) {
-        this.account_id = account_id;
+    public long getAccountId() {
+        return account_id;
     }
 
     public long getAccountNumber() {
@@ -282,10 +277,5 @@ public class Account {
     public void addPerson(Person person)
     {
         this.owners.add(person);
-    }
-
-    public String toString()
-    {
-        return this.type.toUpperCase() + " - *********" + this.getLastFour() + " balance: $" + this.balance;
     }
 }

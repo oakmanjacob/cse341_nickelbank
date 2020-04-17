@@ -8,7 +8,7 @@ import java.sql.*;
 
 public class Person {
 
-    private long person_id;
+    private long person_id = 0;
 
     private String first_name;
     private String last_name;
@@ -16,16 +16,13 @@ public class Person {
     private String phone;
     private Date birth_date;
 
-    private boolean connected;
-
     public Person()
     {
-        connected = false;
+
     }
 
     public Person(long person_id, String first_name, String last_name, String email, String phone, Date birth_date)
     {
-        this.connected = true;
         this.person_id = person_id;
         this.first_name = first_name;
         this.last_name = last_name;
@@ -37,7 +34,7 @@ public class Person {
     {
         Connection conn = DBManager.getConnection();
 
-        if (!connected) {
+        if (this.person_id == 0) {
             String query = "insert into person" +
                     "(first_name, last_name, email, phone, birth_date)" +
                     "values (?, ?, ?, ?, ?) returning person_id into ?";
@@ -69,7 +66,6 @@ public class Person {
                 e.printStackTrace();
                 return false;
             }
-            this.connected = true;
             return true;
         }
         return false;
@@ -121,7 +117,7 @@ public class Person {
 
     // Getters and setters
 
-    public long getPersonId() { return connected ? this.person_id : 0; }
+    public long getPersonId() { return this.person_id; }
 
     public String getFirstName() {
         return first_name;
