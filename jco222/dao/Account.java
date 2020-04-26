@@ -220,6 +220,12 @@ public class Account {
         return account_list;
     }
 
+    public boolean deposit(Branch branch, Person person, double amount)
+    {
+        Transaction_Transfer deposit = new Transaction_Transfer();
+        return false;
+    }
+
     public String toString()
     {
         return this.type.toUpperCase() + " - *********" + this.getLastFour() + " balance: $" + this.balance;

@@ -1,3 +1,4 @@
+import dao.Branch;
 import init.Init;
 import util.DBManager;
 import util.IOManager;
@@ -22,7 +23,9 @@ public class Main {
     public static void main(String[] args) {
         DBManager dbManager = new DBManager();
         dbManager.connect();
-        System.out.println(" $$\\   $$\\ $$\\           $$\\                 $$\\       $$$$$$$\\                      $$\\       \n" +
+
+        // Print header ASCII art
+        System.out.println("\n\n $$\\   $$\\ $$\\           $$\\                 $$\\       $$$$$$$\\                      $$\\       \n" +
                 " $$$\\  $$ |\\__|          $$ |                $$ |      $$  __$$\\                     $$ |      \n" +
                 " $$$$\\ $$ |$$\\  $$$$$$$\\ $$ |  $$\\  $$$$$$\\  $$ |      $$ |  $$ | $$$$$$\\  $$$$$$$\\  $$ |  $$\\ \n" +
                 " $$ $$\\$$ |$$ |$$  _____|$$ | $$  |$$  __$$\\ $$ |      $$$$$$$\\ | \\____$$\\ $$  __$$\\ $$ | $$  |\n" +
@@ -43,7 +46,7 @@ public class Main {
     public static void dashboard()
     {
         while (true) {
-            System.out.println("Banking Dashboard");
+            System.out.println("\nBanking Dashboard");
             System.out.println("(B)ank management, (A)ccounts, (P)urchases, (E)xit");
 
             String input = IOManager.getInputStringLower();
@@ -69,7 +72,7 @@ public class Main {
                 case "e":
                 case "exit":
                 case "quit":
-                    System.out.println("We hate to see you go but love to watch you walk away.");
+                    System.out.println("We hate to see you go but love to watch you walk away.\n");
                     return;
                 default: {
                     System.out.println("We do not have a section for \"" + input + "\" please try again");

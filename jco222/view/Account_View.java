@@ -1,6 +1,7 @@
 package view;
 
 import dao.Account;
+import dao.Branch;
 import dao.Person;
 import dao.Transaction;
 import util.IOManager;
@@ -9,10 +10,17 @@ import java.util.List;
 
 public class Account_View {
     public static Account last_account = null;
+    public static Branch cur_branch = null;
+    public static Person cur_person = null;
 
     public static void getView() {
         while (true) {
-            System.out.println("Account Management");
+            if (Account_View.cur_branch == null)
+            {
+                getBranch();
+            }
+
+            System.out.println("\nAccount Management");
             System.out.println("(W)ithdrawal, (D)eposit, (C)reate account, (B)ack");
             String input = IOManager.getInputStringLower();
 
@@ -34,6 +42,34 @@ public class Account_View {
                     return;
             }
         }
+    }
+
+    public static void getBranch()
+    {
+        System.out.println("Which branch are you banking at?");
+        List<Branch> branch_list = Branch.getAllBranch();
+
+        try {
+            if (branch_list.size() == 0) {
+                Account_View.cur_branch = null;
+            }
+            else if (branch_list.size() == 1)
+            {
+                Account_View.cur_branch = branch_list.get(0);
+            }
+            else {
+                Object object = IOManager.handleTable(branch_list.toArray(), 5);
+                if (object instanceof Branch) {
+                    Account_View.cur_branch = (Branch) object;
+                }
+            }
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+
+        return;
     }
 
     public static void getOpenAccountView() {

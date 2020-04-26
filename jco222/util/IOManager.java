@@ -91,6 +91,11 @@ public class IOManager {
 
     public static Object handleTable(Object[] list, int page_limit)
     {
+        if (list.length == 0)
+        {
+            return null;
+        }
+
         int page = 0;
         int total_pages = (int)Math.ceil((double)list.length / page_limit);
         boolean repeat = true;
@@ -151,11 +156,13 @@ public class IOManager {
                 {
                     return "n";
                 }
+                break;
             case "b":
             case "back":
                 if (page > 0) {
                     return "b";
                 }
+                break;
         }
 
         try {

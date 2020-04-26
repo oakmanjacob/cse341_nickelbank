@@ -13,6 +13,7 @@ public class Address {
         this.address_id = address_id;
         this.line_1 = line_1;
         this.line_2 = line_2;
+
         this.city = city;
         this.state = state;
         this.zip = zip;
@@ -20,7 +21,7 @@ public class Address {
 
     public String toString()
     {
-        String street_address = !line_2.equals("") ? line_1 + " " + line_2 : line_1;
+        String street_address = line_2 != null && !line_2.equals("") ? line_1 + " " + line_2 : line_1;
 
         return street_address  + ", " + city + ", " + state;
     }

@@ -1,5 +1,14 @@
 package dao;
 
+import util.DBManager;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
 public class Branch {
     private long branch_id;
     private String type;
@@ -12,6 +21,48 @@ public class Branch {
         this.address = address;
     }
 
+    public static List<Branch> getAllBranch()
+    {
+        Connection conn = DBManager.getConnection();
+        List<Branch> branch_list = new ArrayList<Branch>();
+
+        try {
+            PreparedStatement ps = conn.prepareStatement(
+                    "SELECT b.branch_id, b.type, a.*" +
+                            "FROM branch b " +
+                            "INNER JOIN address a " +
+                            "ON b.address_id = a.address_id " +
+                            "ORDER BY b.branch_id ASC");
+
+            ResultSet result = ps.executeQuery();
+
+            if (result != null && result.next()) {
+                do {
+                    Address new_address = new Address(
+                            result.getLong("address_id"),
+                            result.getString("line_1"),
+                            result.getString("line_2"),
+                            result.getString("city"),
+                            result.getString("state"),
+                            result.getString("zip")
+                    );
+
+                    branch_list.add(new Branch(
+                            result.getLong("branch_id"),
+                            result.getString("type"),
+                            new_address));
+                }
+                while (result.next());
+            }
+        }
+        catch (SQLException e)
+        {
+            e.printStackTrace();
+        }
+
+        return branch_list;
+    }
+
     public String toString()
     {
         if (this.type.equals("atm"))
@@ -21,5 +72,10 @@ public class Branch {
         else {
             return "BRANCH at " + this.address.toString();
         }
+    }
+
+    public Address getAddress()
+    {
+        return this.address;
     }
 }
