@@ -1,21 +1,13 @@
-JFLAGS =
+JFLAGS = -d
 JC = javac
-.SUFFIXES: .java .class
+OUTFILE = out
+SRC = jco222
+PACKAGES = dao init util view
+CLASSES = Main.java
 
-CLASSES = \
-        Main.java \
-        dao/*.java \
-        util/*.java \
-        view/*.java
-
-.java.class:
-        $(JC) $(JFLAGS) $*.java
-
-
-
-default: classes
-
-classes: $(CLASSES:.java=.class)
+all:
+    mkdir $(OUTFILE)
+    $(JC) $(JFLAGS) $(OUTFILE) $(SRC)/*.java $(SRC)/$(PACKAGES)/*.java
 
 clean:
-        $(RM) *.class
+        rm -rf out
