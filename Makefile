@@ -6,8 +6,11 @@ PACKAGES = dao init util view
 CLASSES = Main.java
 
 all:
-    mkdir $(OUTFILE)
-    $(JC) $(JFLAGS) $(OUTFILE) $(SRC)/*.java $(SRC)/$(PACKAGES)/*.java
+	mkdir -p $(OUTFILE)
+	$(JC) $(JFLAGS) $(OUTFILE) $(SRC)/*.java $(SRC)/*/*.java
+
+jar:
+	jar -cfmv jco222.jar Manifest.txt -C out Main.class */*.class out
 
 clean:
-        rm -rf out
+	rm -rf out
