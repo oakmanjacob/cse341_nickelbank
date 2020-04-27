@@ -49,6 +49,11 @@ public class Person_View {
 
     public static Person getFromEmail()
     {
+        return getFromEmail(true);
+    }
+
+    public static Person getFromEmail(boolean canCreate)
+    {
         System.out.println("Please input your email.");
 
         String email = IOManager.getInputStringEmail();
@@ -61,7 +66,7 @@ public class Person_View {
                 return getFromEmail();
             }
 
-            if (IOManager.yesNo("Do you wish to instead sign up a new person with the email address " + email + "? (Y)es, (N)o"))
+            if (canCreate && IOManager.yesNo("Do you wish to instead sign up a new person with the email address " + email + "? (Y)es, (N)o"))
             {
                 return signup(email);
             }

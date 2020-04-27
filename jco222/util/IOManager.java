@@ -4,8 +4,10 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.sql.Date;
+import java.text.NumberFormat;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.Locale;
 import java.util.regex.Pattern;
 
 public class IOManager {
@@ -89,7 +91,7 @@ public class IOManager {
         }
     }
 
-    public static Object handleTable(Object[] list, int page_limit)
+    public static Object handleTable(Object[] list, int page_limit, boolean disableSelect)
     {
         if (list.length == 0)
         {
@@ -109,9 +111,17 @@ public class IOManager {
             if (list.length > page_limit)
             {
                 System.out.println("Page " + (page + 1) + " of " + total_pages);
-                System.out.println("Type (N)ext or (B)ack to navigate pages or type in a number to indicate your choice");
 
-                String input = IOManager.getPageNavInput(page, page_limit, list.length);
+                if (disableSelect)
+                {
+                    System.out.println("Type (N)ext, (B)ack or (E)xit to navigate");
+                }
+                else
+                {
+                    System.out.println("Type (N)ext or (B)ack to navigate or type in a number to indicate your choice");
+
+                }
+                String input = IOManager.getPageNavInput(page, page_limit, list.length, disableSelect);
 
                 if (input.equals("n"))
                 {
@@ -122,6 +132,10 @@ public class IOManager {
                 {
                     page--;
                     continue;
+                }
+                else if (input.equals("e"))
+                {
+                    return null;
                 }
                 else
                 {
@@ -143,7 +157,7 @@ public class IOManager {
         return null;
     }
 
-    public static String getPageNavInput(int page, int page_limit, int size)
+    public static String getPageNavInput(int page, int page_limit, int size, boolean disableSelect)
     {
         String input = IOManager.getInputStringLower();
         int total_pages = (int)Math.ceil((double)size / page_limit);
@@ -163,6 +177,17 @@ public class IOManager {
                     return "b";
                 }
                 break;
+            case "e":
+            case "exit":
+                if (disableSelect) {
+                    return "e";
+                }
+        }
+
+        if (disableSelect)
+        {
+            System.out.println("Your input is not valid, please try again.");
+            return getPageNavInput(page, page_limit, size, true);
         }
 
         try {
@@ -173,12 +198,12 @@ public class IOManager {
             }
 
             System.out.println("The number you entered is out of the valid range, please try again.");
-            return getPageNavInput(page, page_limit, size);
+            return getPageNavInput(page, page_limit, size, false);
         }
         catch (NumberFormatException e)
         {
             System.out.println("Your input is not valid, please try again.");
-            return getPageNavInput(page, page_limit, size);
+            return getPageNavInput(page, page_limit, size, false);
         }
     }
 
@@ -326,5 +351,11 @@ public class IOManager {
             default:
                 return yesNoCancel(message);
         }
+    }
+
+    public static String formatCurrency(double amount)
+    {
+        NumberFormat usd = NumberFormat.getCurrencyInstance(Locale.US);
+        return usd.format(amount);
     }
 }

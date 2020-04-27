@@ -17,7 +17,7 @@ public class Account_View {
         while (true) {
             if (Account_View.cur_branch == null)
             {
-                getBranch();
+                Account_View.cur_branch = Branch_View.getBranch();
             }
 
             System.out.println("\nAccount Management");
@@ -42,34 +42,6 @@ public class Account_View {
                     return;
             }
         }
-    }
-
-    public static void getBranch()
-    {
-        System.out.println("Which branch are you banking at?");
-        List<Branch> branch_list = Branch.getAllBranch();
-
-        try {
-            if (branch_list.size() == 0) {
-                Account_View.cur_branch = null;
-            }
-            else if (branch_list.size() == 1)
-            {
-                Account_View.cur_branch = branch_list.get(0);
-            }
-            else {
-                Object object = IOManager.handleTable(branch_list.toArray(), 5);
-                if (object instanceof Branch) {
-                    Account_View.cur_branch = (Branch) object;
-                }
-            }
-        }
-        catch(Exception e)
-        {
-            e.printStackTrace();
-        }
-
-        return;
     }
 
     public static void getOpenAccountView() {
@@ -232,11 +204,41 @@ public class Account_View {
         System.out.println(account.toString());
         double amount = IOManager.getInputDouble(1);
 
-        if (IOManager.yesNo("You are about to deposit $" + amount + " into " + account.toString() + ". Is this correct? (Y)es, (N)o"))
+        if (IOManager.yesNo("You are about to deposit " + IOManager.formatCurrency(amount) + " into " + account.toString() + ". Is this correct? (Y)es, (N)o"))
         {
-            // Deposit the money
+            if (Account_View.cur_branch == null)
+            {
+                Account_View.cur_branch = Branch_View.getBranch();
+            }
+
+            if (Account_View.cur_person == null)
+            {
+                System.out.println("Please confirm your identity before deposit");
+                Account_View.cur_person = Person_View.getFromEmail(false);
+            }
+
+            if (account.hasOwner(Account_View.cur_person))
+            {
+                if (account.deposit(amount, cur_person, cur_branch))
+                {
+                    System.out.println("Deposit successful!");
+                    System.out.println("Your new balance is " + IOManager.formatCurrency(account.getBalance()));
+                }
+                else
+                {
+                    System.out.println("There was an error with your deposit, please try again!");
+                }
+            }
+            else
+            {
+                System.out.println("You do not currently have access to this account, aborting deposit");
+                Account_View.cur_person = null;
+                return;
+            }
         }
 
+
+        Account_View.cur_person = null;
         Account_View.cacheAccount(account);
     }
 
@@ -327,6 +329,8 @@ public class Account_View {
             }
         }
 
+        Account_View.cur_person = Person.fromEmail(email);
+
         if (account_list.size() == 1)
         {
             System.out.println("We found one account associated with your email.");
@@ -348,7 +352,7 @@ public class Account_View {
             }
         }
 
-        Object object = IOManager.handleTable(account_list.toArray(), 5);
+        Object object = IOManager.handleTable(account_list.toArray(), 5,false);
 
         if (object instanceof Account)
         {
@@ -363,7 +367,7 @@ public class Account_View {
 
         if (account == null)
         {
-            System.out.println("Canceling deposit process.");
+            System.out.println("Canceling withdrawal process.");
             return;
         }
 
@@ -371,7 +375,7 @@ public class Account_View {
         boolean repeat = true;
         while (repeat) {
             repeat = false;
-            System.out.println("How much would you like to deposit into your account?");
+            System.out.println("How much would you like to withdrawal from your account?");
             System.out.println(account.toString());
             amount = IOManager.getInputDouble(1, account.getBalance());
 
@@ -381,10 +385,22 @@ public class Account_View {
                 }
             }
         }
+        account.updateOwnerList();
 
         if (IOManager.yesNo("You are about to withdrawal $" + amount + " from " + account.toString() + ". Is this correct? (Y)es, (N)o"))
         {
-            // Deposit the money
+            if (Account_View.cur_branch == null)
+            {
+                Account_View.cur_branch = Branch_View.getBranch();
+            }
+
+            if (Account_View.cur_person == null)
+            {
+                Account_View.cur_person = Person_View.getFromEmail();
+            }
+
+            // Withdrawal the money
+            account.withdrawal(amount, Account_View.cur_person, Account_View.cur_branch);
         }
 
         Account_View.cacheAccount(account);

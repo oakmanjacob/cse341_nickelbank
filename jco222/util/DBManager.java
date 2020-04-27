@@ -41,6 +41,25 @@ public class DBManager {
         }
     }
 
+    public static boolean rollbackAndResetAutoCommit()
+    {
+        if (DBManager.conn == null)
+        {
+            return false;
+        }
+
+        try {
+            DBManager.conn.rollback();
+            DBManager.conn.setAutoCommit(true);
+            return true;
+        }
+        catch (SQLException e)
+        {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
     public static Connection login() {
         Connection conn;
         String user;

@@ -74,6 +74,22 @@ public class Branch {
         }
     }
 
+    public long getBranchId() {
+        return branch_id;
+    }
+
+    public void setBranchId(long branch_id) {
+        this.branch_id = branch_id;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
     public Address getAddress()
     {
         return this.address;

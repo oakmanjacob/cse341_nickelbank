@@ -3,6 +3,7 @@ package dao;
 import oracle.jdbc.OraclePreparedStatement;
 import oracle.jdbc.proxy.annotation.Pre;
 import util.DBManager;
+import util.IOManager;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -58,6 +59,7 @@ public class Account {
                 ps.registerReturnParameter(5, Types.NUMERIC);
 
                 if (ps.executeUpdate() == 0) {
+                    DBManager.rollbackAndResetAutoCommit();
                     return false;
                 }
 
@@ -86,6 +88,7 @@ public class Account {
                 conn.setAutoCommit(true);
             } catch (SQLException e) {
                 e.printStackTrace();
+                DBManager.rollbackAndResetAutoCommit();
                 return false;
             }
             return true;
@@ -220,15 +223,151 @@ public class Account {
         return account_list;
     }
 
-    public boolean deposit(Branch branch, Person person, double amount)
+    public boolean updateBalance()
     {
-        Transaction_Transfer deposit = new Transaction_Transfer();
+        if (this.account_id == 0)
+        {
+            return false;
+        }
+
+        Connection conn = DBManager.getConnection();
+        this.owners = new ArrayList<Person>();
+
+        try {
+            PreparedStatement ps = conn.prepareStatement(
+                    "SELECT ab.balance " +
+                            "FROM account a " +
+                            "INNER JOIN account_balance ab " +
+                            "ON a.account_id = ab.account_id " +
+                            "WHERE a.account_id = ?");
+
+            ps.setLong(1, this.account_id);
+
+            ResultSet result = ps.executeQuery();
+
+            if (result != null && result.next()) {
+                this.balance = result.getDouble("balance");
+            }
+            else
+            {
+                return false;
+            }
+        }
+        catch (SQLException e)
+        {
+            e.printStackTrace();
+            return false;
+        }
+
+        return true;
+    }
+
+    public boolean updateOwnerList()
+    {
+        if (this.account_id == 0)
+        {
+            return false;
+        }
+
+        Connection conn = DBManager.getConnection();
+        this.owners = new ArrayList<Person>();
+
+        try {
+            PreparedStatement ps = conn.prepareStatement(
+                    "SELECT p.* " +
+                            "FROM person p " +
+                            "INNER JOIN person_account pa " +
+                            "ON p.person_id = pa.person_id " +
+                            "WHERE pa.account_id = ? " +
+                            "ORDER BY p.created ASC");
+
+            ps.setLong(1, this.account_id);
+
+            ResultSet result = ps.executeQuery();
+
+            if (result != null && result.next()) {
+                do {
+                    this.owners.add(new Person(
+                            result.getLong("person_id"),
+                            result.getString("first_name"),
+                            result.getString("last_name"),
+                            result.getString("email"),
+                            result.getString("phone"),
+                            result.getDate("birth_date")));
+                }
+                while (result.next());
+            }
+            else
+            {
+                return false;
+            }
+        }
+        catch (SQLException e)
+        {
+            e.printStackTrace();
+            return false;
+        }
+
+        return true;
+    }
+
+    public boolean hasOwner(Person person)
+    {
+        if (person == null || person.getPersonId() == 0)
+        {
+            return false;
+        }
+
+        Connection conn = DBManager.getConnection();
+        try {
+            PreparedStatement ps = conn.prepareStatement(
+                    "SELECT count(pa.person_id) as person_count " +
+                            "FROM person_account pa " +
+                            "WHERE pa.account_id = ? " +
+                            "AND pa.person_id = ?");
+
+            ps.setLong(1, this.account_id);
+            ps.setLong(2, person.getPersonId());
+
+            ResultSet result = ps.executeQuery();
+
+            if (result == null || !result.next() || result.getLong("person_count") == 0) {
+                return false;
+            }
+        }
+        catch (SQLException e)
+        {
+            e.printStackTrace();
+            return false;
+        }
+
+        return true;
+    }
+
+    public boolean deposit(double amount, Person person, Branch branch)
+    {
+        if (this.account_id == 0)
+        {
+            return false;
+        }
+
+        Transaction_Transfer deposit = Transaction_Transfer.getDeposit(amount, this, person, branch);
+
+        if (deposit.save() && this.updateBalance())
+        {
+            return true;
+        }
+        return false;
+    }
+
+    public boolean withdrawal(double amount, Person person, Branch branch)
+    {
         return false;
     }
 
     public String toString()
     {
-        return this.type.toUpperCase() + " - *********" + this.getLastFour() + " balance: $" + this.balance;
+        return this.type.toUpperCase() + " - *********" + this.getLastFour() + " balance: " + IOManager.formatCurrency(this.balance);
     }
 
     public long getAccountId() {
@@ -283,5 +422,10 @@ public class Account {
     public void addPerson(Person person)
     {
         this.owners.add(person);
+    }
+
+    public List<Person> getOwners(Person person)
+    {
+        return this.owners;
     }
 }

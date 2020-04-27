@@ -110,6 +110,11 @@ public class Person {
         return person;
     }
 
+    public boolean equals(Person other)
+    {
+        return this.person_id == other.person_id;
+    }
+
     public boolean delete()
     {
         return false;
