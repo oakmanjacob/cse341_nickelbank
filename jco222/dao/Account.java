@@ -97,6 +97,46 @@ public class Account {
         return false;
     }
 
+    public static Account fromAccountId(long account_id)
+    {
+        Connection conn = DBManager.getConnection();
+        Account account = null;
+
+        try {
+            PreparedStatement ps = conn.prepareStatement(
+                    "SELECT a.*, ab.balance " +
+                            "FROM account a " +
+                            "INNER JOIN account_balance ab " +
+                            "ON a.account_id = ab.account_id " +
+                            "WHERE a.account_id = ?");
+
+            ps.setLong(1, account_id);
+
+            ResultSet result = ps.executeQuery();
+
+            if (result != null && result.next()) {
+                account = new Account(
+                        result.getLong("account_id"),
+                        result.getLong("account_number"),
+                        result.getString("type"),
+                        result.getDouble("balance"),
+                        result.getDouble("interest_rate"),
+                        result.getDouble("min_balance"),
+                        result.getTimestamp("created")
+                );
+            }
+            else {
+                return null;
+            }
+        }
+        catch (SQLException e)
+        {
+            e.printStackTrace();
+        }
+
+        return account;
+    }
+
     public static Account fromNumber(long account_number)
     {
         Connection conn = DBManager.getConnection();
@@ -237,10 +277,8 @@ public class Account {
         try {
             PreparedStatement ps = conn.prepareStatement(
                     "SELECT ab.balance " +
-                            "FROM account a " +
-                            "INNER JOIN account_balance ab " +
-                            "ON a.account_id = ab.account_id " +
-                            "WHERE a.account_id = ?");
+                            "FROM account_balance ab " +
+                            "WHERE ab.account_id = ?");
 
             ps.setLong(1, this.account_id);
 

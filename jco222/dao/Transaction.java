@@ -26,8 +26,7 @@ public class Transaction {
 
     public boolean save()
     {
-        if (this.transaction_id == 0 && this.person != null && this.person.getPersonId() != 0
-                && this.branch != null && this.branch.getBranchId() != 0)
+        if (this.transaction_id == 0)
         {
             Connection conn = DBManager.getConnection();
 
@@ -38,8 +37,23 @@ public class Transaction {
                     OraclePreparedStatement ps = (OraclePreparedStatement)conn.prepareStatement(query);
             ) {
                 conn.setAutoCommit(false);
-                ps.setLong(1, this.person.getPersonId());
-                ps.setLong(2, this.branch.getBranchId());
+
+                if (this.person != null) {
+                    ps.setLong(1, this.person.getPersonId());
+                }
+                else
+                {
+                    ps.setNull(1, Types.NUMERIC);
+                }
+
+                if (this.branch != null) {
+                    ps.setLong(2, this.branch.getBranchId());
+                }
+                else
+                {
+                    ps.setNull(2, Types.NUMERIC);
+                }
+
                 ps.setDouble(3, this.amount);
                 ps.setString(4, this.type);
                 ps.setString(5, this.status);

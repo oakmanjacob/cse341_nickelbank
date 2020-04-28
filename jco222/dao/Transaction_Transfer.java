@@ -58,7 +58,7 @@ public class Transaction_Transfer extends Transaction {
                   if (this.from_account != null) {
                         this.from_account.updateBalance();
                         if (this.from_account.getBalance() < this.amount) {
-                              conn.setAutoCommit(true);
+                              DBManager.rollbackAndResetAutoCommit();
                               return false;
                         }
 

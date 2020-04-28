@@ -71,6 +71,43 @@ public class Person {
         return false;
     }
 
+    public static Person fromPersonId(long person_id)
+    {
+        Connection conn = DBManager.getConnection();
+        Person person = null;
+
+        try {
+            PreparedStatement ps = conn.prepareStatement(
+                    "SELECT " +
+                            "p.person_id, p.first_name, p.last_name, p.email, p.phone, p.birth_date " +
+                            "FROM person p " +
+                            "WHERE p.person_id = ?");
+
+            ps.setLong(1, person_id);
+
+            ResultSet result = ps.executeQuery();
+
+            if (result != null && result.next()) {
+                person = new Person(
+                        result.getLong("person_id"),
+                        result.getString("first_name"),
+                        result.getString("last_name"),
+                        result.getString("email"),
+                        result.getString("phone"),
+                        result.getDate("birth_date"));
+            }
+            else {
+                return null;
+            }
+        }
+        catch (SQLException e)
+        {
+            e.printStackTrace();
+        }
+
+        return person;
+    }
+
     public static Person fromCardNumber(long card_number)
     {
         Connection conn = DBManager.getConnection();

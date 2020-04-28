@@ -10,9 +10,9 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 
 public class Account_View {
-    public static Account last_account = null;
     public static Branch cur_branch = null;
-    public static Person cur_person = null;
+    public static Account cache_account = null;
+    public static Person cache_person = null;
 
     public static void getView() {
         boolean repeat = true;
@@ -62,6 +62,8 @@ public class Account_View {
             case "switch":
             case "switch branch":
                 Account_View.cur_branch = Branch_View.getBranch();
+                Account_View.cache_person = null;
+                Account_View.cache_account = null;
                 break;
             case "b":
             case "back":
@@ -90,6 +92,8 @@ public class Account_View {
             case "switch":
             case "switch branch":
                 Account_View.cur_branch = Branch_View.getBranch();
+                Account_View.cache_person = null;
+                Account_View.cache_account = null;
                 break;
             case "b":
             case "back":
@@ -107,6 +111,7 @@ public class Account_View {
             return;
         }
 
+        System.out.println("\nACCOUNT INFO");
         System.out.println("Account Number: " + account.getAccountNumber());
         System.out.println("Type: " + account.getType().toUpperCase());
         System.out.println("Balance: " + IOManager.formatCurrency(account.getBalance()));
@@ -156,8 +161,9 @@ public class Account_View {
                 {
                     System.out.println("This withdrawal will take your account below the minimum balance and may subject you to fees.");
 
-                    if (IOManager.yesNo("Would you like to withdrawal a different amount from this account? (Y)es, (N)o")) {
-                        repeat = true;
+                    if (!IOManager.yesNo("Are you sure you wish to continue? (Y)es, (N)o")) {
+                        System.out.println("Canceling withdrawal process.\n");
+                        repeat = false;
                         continue;
                     }
                 }
@@ -167,13 +173,13 @@ public class Account_View {
                     Account_View.cur_branch = Branch_View.getBranch();
                 }
 
-                if (Account_View.cur_person == null) {
+                if (Account_View.cache_person == null) {
                     System.out.println("Please confirm your identity before withdrawal");
-                    Account_View.cur_person = Person_View.getFromEmail(false);
+                    Account_View.cache_person = Person_View.getFromEmail(false);
                 }
 
-                if (account.hasOwner(Account_View.cur_person)) {
-                    if (account.withdrawal(amount, cur_person, cur_branch)) {
+                if (account.hasOwner(Account_View.cache_person)) {
+                    if (account.withdrawal(amount, cache_person, cur_branch)) {
                         System.out.println("Withdrawal successful!");
                         System.out.println("Your new balance is " + IOManager.formatCurrency(account.getBalance()));
                     } else {
@@ -181,7 +187,7 @@ public class Account_View {
                     }
                 } else {
                     System.out.println("You do not currently have access to this account, aborting withdrawal");
-                    Account_View.cur_person = null;
+                    Account_View.cache_person = null;
                     return;
                 }
             }
@@ -193,7 +199,7 @@ public class Account_View {
             }
         }
 
-        Account_View.cur_person = null;
+        Account_View.cache_person = null;
         Account_View.cacheAccount(account);
     }
 
@@ -218,13 +224,13 @@ public class Account_View {
                     Account_View.cur_branch = Branch_View.getBranch();
                 }
 
-                if (Account_View.cur_person == null) {
+                if (Account_View.cache_person == null) {
                     System.out.println("Please confirm your identity before deposit");
-                    Account_View.cur_person = Person_View.getFromEmail(false);
+                    Account_View.cache_person = Person_View.getFromEmail(false);
                 }
 
-                if (account.hasOwner(Account_View.cur_person)) {
-                    if (account.deposit(amount, cur_person, cur_branch)) {
+                if (account.hasOwner(Account_View.cache_person)) {
+                    if (account.deposit(amount, cache_person, cur_branch)) {
                         System.out.println("Deposit successful!");
                         System.out.println("Your new balance is " + IOManager.formatCurrency(account.getBalance()));
                     } else {
@@ -235,11 +241,9 @@ public class Account_View {
                     return;
                 }
             }
-            else {
-                if (!IOManager.yesNo("Would you like to deposit a different amount into this account? (Y)es, (N)o")) {
-                    System.out.println("Canceling deposit process.\n");
-                    repeat = false;
-                }
+            else if (!IOManager.yesNo("Would you like to deposit a different amount into this account? (Y)es, (N)o")) {
+                System.out.println("Canceling deposit process.\n");
+                repeat = false;
             }
         }
 
@@ -319,14 +323,14 @@ public class Account_View {
 
     public static void cacheAccount(Account account)
     {
-        if (IOManager.yesNo("Should we keep this account handy for future transactions? (Y)es, (N)o")) {
+        if (IOManager.yesNo("\nShould we keep this account handy for future transactions? (Y)es, (N)o")) {
             System.out.println("We'll keep it nearby then!");
-            Account_View.last_account = account;
+            Account_View.cache_account = account;
         }
         else
         {
-            Account_View.cur_person = null;
-            Account_View.last_account = null;
+            Account_View.cache_person = null;
+            Account_View.cache_account = null;
         }
     }
 
@@ -400,10 +404,10 @@ public class Account_View {
 
     public static Account getAccount()
     {
-        if (last_account != null && IOManager.yesNo(
-                "We have an account ending in " + last_account.getLastFour() + " handy, is this the account you want? (Y)es, (N)o")) {
-            last_account.updateBalance();
-            return last_account;
+        if (cache_account != null && IOManager.yesNo(
+                "We have an account ending in " + cache_account.getLastFour() + " handy, is this the account you want? (Y)es, (N)o")) {
+            cache_account.updateBalance();
+            return cache_account;
         }
 
         if (cur_branch != null && "atm".equals(cur_branch.getType()))
@@ -469,7 +473,7 @@ public class Account_View {
             return null;
         }
 
-        Account_View.cur_person = Person.fromCardNumber(card_number);
+        Account_View.cache_person = Person.fromCardNumber(card_number);
 
         return account;
     }
@@ -493,7 +497,7 @@ public class Account_View {
             }
         }
 
-        Account_View.cur_person = Person.fromEmail(email);
+        Account_View.cache_person = Person.fromEmail(email);
 
         if (account_list.size() == 1)
         {
