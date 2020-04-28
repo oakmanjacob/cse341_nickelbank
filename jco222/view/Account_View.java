@@ -6,6 +6,7 @@ import dao.Person;
 import dao.Transaction;
 import util.IOManager;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 public class Account_View {
@@ -14,34 +15,235 @@ public class Account_View {
     public static Person cur_person = null;
 
     public static void getView() {
-        while (true) {
+        boolean repeat = true;
+        while (repeat) {
             if (Account_View.cur_branch == null)
             {
                 Account_View.cur_branch = Branch_View.getBranch();
             }
 
             System.out.println("\nAccount Management");
-            System.out.println("(W)ithdrawal, (D)eposit, (C)reate account, (B)ack");
-            String input = IOManager.getInputStringLower();
+            if (Account_View.cur_branch == null || "full".equals(Account_View.cur_branch.getType()))
+            {
+                repeat = Account_View.getBranchView();
+            }
+            else
+            {
+                repeat = Account_View.getATMView();
+            }
 
-            switch (input) {
-                case "w":
-                case "withdrawal":
-                    Account_View.getWithdrawalView();
-                    break;
-                case "d":
-                case "deposit":
-                    Account_View.getDepositView();
-                    break;
-                case "c":
-                case "create account":
-                    Account_View.getOpenAccountView();
-                    break;
-                case "b":
-                case "back":
+        }
+    }
+
+    public static boolean getBranchView()
+    {
+        System.out.println("(A)ccount Info, (W)ithdrawal, (D)eposit, (C)reate account, (S)witch Branch, (B)ack");
+        String input = IOManager.getInputStringLower();
+
+        switch (input) {
+            case "a":
+            case "account":
+            case "account info":
+                Account_View.getAccountInfoView();
+                break;
+            case "w":
+            case "withdrawal":
+                Account_View.getWithdrawalView();
+                break;
+            case "d":
+            case "deposit":
+                Account_View.getDepositView();
+                break;
+            case "c":
+            case "create account":
+                Account_View.getOpenAccountView();
+                break;
+            case "s":
+            case "switch":
+            case "switch branch":
+                Account_View.cur_branch = Branch_View.getBranch();
+                break;
+            case "b":
+            case "back":
+                return false;
+        }
+
+        return true;
+    }
+
+    public static boolean getATMView()
+    {
+        System.out.println("(A)ccount Info, (W)ithdrawal, (S)witch Branch, (B)ack");
+        String input = IOManager.getInputStringLower();
+
+        switch (input) {
+            case "a":
+            case "account":
+            case "account info":
+                Account_View.getAccountInfoView();
+                break;
+            case "w":
+            case "withdrawal":
+                Account_View.getWithdrawalView();
+                break;
+            case "s":
+            case "switch":
+            case "switch branch":
+                Account_View.cur_branch = Branch_View.getBranch();
+                break;
+            case "b":
+            case "back":
+                return false;
+        }
+
+        return true;
+    }
+
+    public static void getAccountInfoView() {
+        Account account = getAccount();
+
+        if (account == null || account.getAccountId() == 0)
+        {
+            return;
+        }
+
+        System.out.println("Account Number: " + account.getAccountNumber());
+        System.out.println("Type: " + account.getType().toUpperCase());
+        System.out.println("Balance: " + IOManager.formatCurrency(account.getBalance()));
+
+        if (account.getCreated() != null) {
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+            String dateOpened = formatter.format(account.getCreated());
+            System.out.println("Opened: " + dateOpened);
+        }
+
+        Account_View.cacheAccount(account);
+    }
+
+    public static void getWithdrawalView() {
+        Account account = getAccount();
+
+        if (account == null)
+        {
+            System.out.println("Canceling withdrawal process.");
+            return;
+        }
+
+        boolean repeat = true;
+        while (repeat) {
+            System.out.println("How much would you like to withdrawal from your account?");
+            System.out.println(account.toString());
+            double amount = IOManager.getInputDouble(1);
+
+            if (IOManager.yesNo("You are about to withdrawal " + IOManager.formatCurrency(amount) + " from " + account.toString() + ". Is this correct? (Y)es, (N)o")) {
+                if (account.getBalance() - amount < 0)
+                {
+                    System.out.println("This withdrawal will overdraw your account and thus cannot be allowed");
+
+                    if (IOManager.yesNo("Would you like to withdrawal a different amount from this account? (Y)es, (N)o")) {
+                        repeat = true;
+                        continue;
+                    }
+                    else
+                    {
+                        System.out.println("Canceling withdrawal process.\n");
+                        repeat = false;
+                    }
+
+                    continue;
+                }
+                else if (account.getBalance() - amount < account.getMinBalance())
+                {
+                    System.out.println("This withdrawal will take your account below the minimum balance and may subject you to fees.");
+
+                    if (IOManager.yesNo("Would you like to withdrawal a different amount from this account? (Y)es, (N)o")) {
+                        repeat = true;
+                        continue;
+                    }
+                }
+
+                repeat = false;
+                if (Account_View.cur_branch == null) {
+                    Account_View.cur_branch = Branch_View.getBranch();
+                }
+
+                if (Account_View.cur_person == null) {
+                    System.out.println("Please confirm your identity before withdrawal");
+                    Account_View.cur_person = Person_View.getFromEmail(false);
+                }
+
+                if (account.hasOwner(Account_View.cur_person)) {
+                    if (account.withdrawal(amount, cur_person, cur_branch)) {
+                        System.out.println("Withdrawal successful!");
+                        System.out.println("Your new balance is " + IOManager.formatCurrency(account.getBalance()));
+                    } else {
+                        System.out.println("There was an error with your withdrawal, please try again!");
+                    }
+                } else {
+                    System.out.println("You do not currently have access to this account, aborting withdrawal");
+                    Account_View.cur_person = null;
                     return;
+                }
+            }
+            else {
+                if (!IOManager.yesNo("Would you like to withdrawal a different amount from this account? (Y)es, (N)o")) {
+                    System.out.println("Canceling withdrawal process.\n");
+                    repeat = false;
+                }
             }
         }
+
+        Account_View.cur_person = null;
+        Account_View.cacheAccount(account);
+    }
+
+    public static void getDepositView() {
+        Account account = getAccount();
+
+        if (account == null)
+        {
+            System.out.println("Canceling deposit process.");
+            return;
+        }
+
+        boolean repeat = true;
+        while (repeat) {
+            System.out.println("How much would you like to deposit into your account?");
+            System.out.println(account.toString());
+            double amount = IOManager.getInputDouble(1);
+
+            if (IOManager.yesNo("You are about to deposit " + IOManager.formatCurrency(amount) + " into " + account.toString() + ". Is this correct? (Y)es, (N)o")) {
+                repeat = false;
+                if (Account_View.cur_branch == null) {
+                    Account_View.cur_branch = Branch_View.getBranch();
+                }
+
+                if (Account_View.cur_person == null) {
+                    System.out.println("Please confirm your identity before deposit");
+                    Account_View.cur_person = Person_View.getFromEmail(false);
+                }
+
+                if (account.hasOwner(Account_View.cur_person)) {
+                    if (account.deposit(amount, cur_person, cur_branch)) {
+                        System.out.println("Deposit successful!");
+                        System.out.println("Your new balance is " + IOManager.formatCurrency(account.getBalance()));
+                    } else {
+                        System.out.println("There was an error with your deposit, please try again!");
+                    }
+                } else {
+                    System.out.println("You do not currently have access to this account, aborting deposit");
+                    return;
+                }
+            }
+            else {
+                if (!IOManager.yesNo("Would you like to deposit a different amount into this account? (Y)es, (N)o")) {
+                    System.out.println("Canceling deposit process.\n");
+                    repeat = false;
+                }
+            }
+        }
+
+        Account_View.cacheAccount(account);
     }
 
     public static void getOpenAccountView() {
@@ -117,9 +319,14 @@ public class Account_View {
 
     public static void cacheAccount(Account account)
     {
-        if (IOManager.yesNo("Should we keep this account handy for a bit? (Y)es, (N)o")) {
+        if (IOManager.yesNo("Should we keep this account handy for future transactions? (Y)es, (N)o")) {
             System.out.println("We'll keep it nearby then!");
-            last_account = account;
+            Account_View.last_account = account;
+        }
+        else
+        {
+            Account_View.cur_person = null;
+            Account_View.last_account = null;
         }
     }
 
@@ -167,18 +374,18 @@ public class Account_View {
         {
             repeat = false;
             System.out.println("At Nickel Bank we offer two types of checking accounts,\n" +
-                    "(1) Recommended at a 0.01% interest and\n" +
-                    "(2) at the NOT Recommended 2% interest\n" +
+                    "(1) Recommended at a $100 minimum balance and\n" +
+                    "(2) at the NOT Recommended $50 minimum balance\n" +
                     "Type 1 or 2 to select your preference or (E)xit to cancel account creation");
             String input = IOManager.getInputStringLower();
 
             switch (input)
             {
                 case "1":
-                    account.setMinBalance(50);
+                    account.setMinBalance(100);
                     break;
                 case "2":
-                    account.setMinBalance(100);
+                    account.setMinBalance(50);
                     break;
                 case "e":
                 case "exit":
@@ -191,62 +398,17 @@ public class Account_View {
         return account;
     }
 
-    public static void getDepositView() {
-        Account account = getAccount();
-
-        if (account == null)
-        {
-            System.out.println("Canceling deposit process.");
-            return;
-        }
-
-        System.out.println("How much would you like to deposit into your account?");
-        System.out.println(account.toString());
-        double amount = IOManager.getInputDouble(1);
-
-        if (IOManager.yesNo("You are about to deposit " + IOManager.formatCurrency(amount) + " into " + account.toString() + ". Is this correct? (Y)es, (N)o"))
-        {
-            if (Account_View.cur_branch == null)
-            {
-                Account_View.cur_branch = Branch_View.getBranch();
-            }
-
-            if (Account_View.cur_person == null)
-            {
-                System.out.println("Please confirm your identity before deposit");
-                Account_View.cur_person = Person_View.getFromEmail(false);
-            }
-
-            if (account.hasOwner(Account_View.cur_person))
-            {
-                if (account.deposit(amount, cur_person, cur_branch))
-                {
-                    System.out.println("Deposit successful!");
-                    System.out.println("Your new balance is " + IOManager.formatCurrency(account.getBalance()));
-                }
-                else
-                {
-                    System.out.println("There was an error with your deposit, please try again!");
-                }
-            }
-            else
-            {
-                System.out.println("You do not currently have access to this account, aborting deposit");
-                Account_View.cur_person = null;
-                return;
-            }
-        }
-
-
-        Account_View.cur_person = null;
-        Account_View.cacheAccount(account);
-    }
-
     public static Account getAccount()
     {
         if (last_account != null && IOManager.yesNo(
                 "We have an account ending in " + last_account.getLastFour() + " handy, is this the account you want? (Y)es, (N)o")) {
+            last_account.updateBalance();
             return last_account;
+        }
+
+        if (cur_branch != null && "atm".equals(cur_branch.getType()))
+        {
+            return getFromCard();
         }
 
         System.out.println("Would you like to access your account via (A)ccount number, (D)ebit card or (L)ookup an account?");
@@ -307,6 +469,8 @@ public class Account_View {
             return null;
         }
 
+        Account_View.cur_person = Person.fromCardNumber(card_number);
+
         return account;
     }
 
@@ -360,49 +524,5 @@ public class Account_View {
         }
 
         return null;
-    }
-
-    public static void getWithdrawalView() {
-        Account account = getAccount();
-
-        if (account == null)
-        {
-            System.out.println("Canceling withdrawal process.");
-            return;
-        }
-
-        double amount = 0;
-        boolean repeat = true;
-        while (repeat) {
-            repeat = false;
-            System.out.println("How much would you like to withdrawal from your account?");
-            System.out.println(account.toString());
-            amount = IOManager.getInputDouble(1, account.getBalance());
-
-            if (amount > account.getBalance() - account.getMinBalance()) {
-                if (!IOManager.yesNo("This withdrawal will take your account below its minimum balance and subject you to penalties, is this what you want? (Y)es, (N)o")) {
-                    repeat = false;
-                }
-            }
-        }
-        account.updateOwnerList();
-
-        if (IOManager.yesNo("You are about to withdrawal $" + amount + " from " + account.toString() + ". Is this correct? (Y)es, (N)o"))
-        {
-            if (Account_View.cur_branch == null)
-            {
-                Account_View.cur_branch = Branch_View.getBranch();
-            }
-
-            if (Account_View.cur_person == null)
-            {
-                Account_View.cur_person = Person_View.getFromEmail();
-            }
-
-            // Withdrawal the money
-            account.withdrawal(amount, Account_View.cur_person, Account_View.cur_branch);
-        }
-
-        Account_View.cacheAccount(account);
     }
 }

@@ -38,7 +38,13 @@ public class Main {
         System.out.println("\n\nWelcome to Nickel Bank, \"" + slogans[rand.nextInt(slogans.length)] + "\"");
         System.out.println("What can we help you with today?");
 
-        Main.dashboard();
+        try {
+            Main.dashboard();
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
 
         dbManager.disconnect();
     }
@@ -75,6 +81,7 @@ public class Main {
                     System.out.println("We hate to see you go but love to watch you walk away.\n");
                     return;
                 default: {
+                    IOManager.printError();
                     System.out.println("We do not have a section for \"" + input + "\" please try again");
                 }
             }

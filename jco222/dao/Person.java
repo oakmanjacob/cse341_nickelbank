@@ -71,6 +71,45 @@ public class Person {
         return false;
     }
 
+    public static Person fromCardNumber(long card_number)
+    {
+        Connection conn = DBManager.getConnection();
+        Person person = null;
+
+        try {
+            PreparedStatement ps = conn.prepareStatement(
+                    "SELECT " +
+                            "p.person_id, p.first_name, p.last_name, p.email, p.phone, p.birth_date " +
+                            "FROM person p " +
+                            "INNER JOIN card c " +
+                            "ON p.person_id = c.person_id " +
+                            "WHERE c.card_number = ?");
+
+            ps.setLong(1, card_number);
+
+            ResultSet result = ps.executeQuery();
+
+            if (result != null && result.next()) {
+                person = new Person(
+                        result.getLong("person_id"),
+                        result.getString("first_name"),
+                        result.getString("last_name"),
+                        result.getString("email"),
+                        result.getString("phone"),
+                        result.getDate("birth_date"));
+            }
+            else {
+                return null;
+            }
+        }
+        catch (SQLException e)
+        {
+            e.printStackTrace();
+        }
+
+        return person;
+    }
+
     public static Person fromEmail(String email)
     {
         Connection conn = DBManager.getConnection();
@@ -113,6 +152,11 @@ public class Person {
     public boolean equals(Person other)
     {
         return this.person_id == other.person_id;
+    }
+
+    public String toString()
+    {
+        return this.first_name + " " + this.last_name;
     }
 
     public boolean delete()

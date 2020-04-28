@@ -1,4 +1,5 @@
 package dao;
 
-public class Card_Debit {
+public class Card_Debit extends Card {
+    private Account account;
 }

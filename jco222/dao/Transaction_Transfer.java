@@ -22,6 +22,20 @@ public class Transaction_Transfer extends Transaction {
             {
                   Transaction_Transfer result = new Transaction_Transfer(amount, person, branch, "deposit", "pending");
                   result.to_account = account;
+                  return result;
+            }
+            return null;
+      }
+
+      public static Transaction_Transfer getWithdrawal(double amount, Account account, Person person, Branch branch)
+      {
+            if (account != null && account.getAccountId() != 0 &&
+                    person != null && person.getPersonId() != 0 &&
+                    branch != null && branch.getBranchId() != 0)
+            {
+                  Transaction_Transfer result = new Transaction_Transfer(amount, person, branch, "deposit", "pending");
+                  result.from_account = account;
+                  return result;
             }
             return null;
       }
@@ -31,11 +45,14 @@ public class Transaction_Transfer extends Transaction {
             Connection conn = DBManager.getConnection();
 
             String query = "insert into transaction_transfer" +
-                    "(transaction_id, from_account_id, to_account_id)";
+                    "(transaction_id, from_account_id, to_account_id)" +
+                    "values (?, ?, ?)";
             try (
                     PreparedStatement ps = conn.prepareStatement(query);
             ) {
                   conn.setAutoCommit(false);
+
+                  boolean fee = false;
 
                   // Block transactions which will set the sending account to less than $0
                   if (this.from_account != null) {
@@ -43,6 +60,11 @@ public class Transaction_Transfer extends Transaction {
                         if (this.from_account.getBalance() < this.amount) {
                               conn.setAutoCommit(true);
                               return false;
+                        }
+
+                        if (from_account.getBalance() - amount < from_account.getMinBalance())
+                        {
+                              fee = true;
                         }
                   }
 
@@ -80,16 +102,10 @@ public class Transaction_Transfer extends Transaction {
                         return false;
                   }
 
-                  if (from_account != null)
+                  if (fee)
                   {
-                        from_account.updateBalance();
-                        if (from_account.getBalance() < from_account.getMinBalance())
-                        {
-                              if (!this.addFee()) {
-                                    DBManager.rollbackAndResetAutoCommit();
-                                    return false;
-                              }
-                        }
+                        System.out.println("FEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE");
+                        //this.addFee();
                   }
 
                   conn.commit();
@@ -106,6 +122,7 @@ public class Transaction_Transfer extends Transaction {
       {
             Transaction_Transfer fee = new Transaction_Transfer(0.69, this.person, this.branch, "fee", "pending");
             fee.from_account = this.from_account;
+            fee.parent_transaction_id = this.transaction_id;
             return fee.save();
       }
 

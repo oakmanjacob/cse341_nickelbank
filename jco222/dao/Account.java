@@ -36,9 +36,10 @@ public class Account {
         this.account_id = account_id;
         this.account_number = account_number;
         this.type = type;
+        this.balance = balance;
         this.interest_rate = interest_rate;
         this.min_balance = min_balance;
-        this.balance = balance;
+        this.created = created;
     }
 
     public boolean save() {
@@ -353,15 +354,28 @@ public class Account {
 
         Transaction_Transfer deposit = Transaction_Transfer.getDeposit(amount, this, person, branch);
 
-        if (deposit.save() && this.updateBalance())
+        if (deposit != null && deposit.save() && this.updateBalance())
         {
             return true;
         }
+
         return false;
     }
 
     public boolean withdrawal(double amount, Person person, Branch branch)
     {
+        if (this.account_id == 0)
+        {
+            return false;
+        }
+
+        Transaction_Transfer withdrawal = Transaction_Transfer.getWithdrawal(amount, this, person, branch);
+
+        if (withdrawal != null && withdrawal.save() && this.updateBalance())
+        {
+            return true;
+        }
+
         return false;
     }
 
