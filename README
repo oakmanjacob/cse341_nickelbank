@@ -4,32 +4,66 @@ Jacob Oakman
 jco222
 
 ## Compiling and building
-
-### Compiling, a simple makefile has been provided.
+### A simple makefile has been provided for compilation.
 $> make
 This will compile the code into class files stored in /out/
 
 ### Creating the JAR file
 $> make jar
-This will run the jar command to generate a jar file
+This will run the jar command to generate a jar file jco222.jar
 
 ### Running
 $> java -jar jco222.jar
+You will want to have a decent size terminal window to allow for our logo to not wrap.
 
 
-## Functionality
+## Bank Management
 
-### Bank Management
+This section is not properly set up yet.
+
+## Accounts
+
+Note: Branch banking
+In order to access an account, you must first select which branch you're at.
+You can only interact with ATM's through a debit card and can only check accounts and handle withdrawals.
+Full branches can also handle deposits and opening new accounts. You can also access your accounts through
+more methods including account number and a lookup via email. The most recent account to be accessed can
+be cached for easy later transactions.
+
+Interesting accounts:
+
+Interesting debit cards:
+
+Interesting email addresses:
 
 
+### Account Info
 
-### Accounts
+This gives some basic information about an account including the current balance.
 
-#### Account Info
+### Withdrawals and Deposits
 
-#### Withdrawals and Deposits
+The minimum withdrawal / deposit amount is $1. If the identity of the customer cannot be determined via an email
+address entered to find accounts or finding an account via a debit card, the customer will have to enter their
+email address to verify their identity. If they do not have access to the account, the transaction will be canceled.
 
-#### Create new Account
+Withdrawals cannot take accounts regardless of type into a negative balance however checking accounts can be taken
+below their minimum balance but this will subject the transaction to fees. Fees at Nickel Bank consist of the software
+printing out the word "FEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE" which the teller will be instructed to yell at the customer.
 
-### Payments
+Deposits are not available at ATMs but are available at branches. The interface is similar to the withdrawal except
+we do not apply fees to deposits even when a deposit will keep the account below the minimum balance.
 
+### Create new Account
+
+New accounts can be created for both savings and checking accounts. There are two options for interest rates on savings
+accounts and two options for minimum balances for checking accounts. We print helpful tips for the correct option to
+choose. Before creating an account, you must confirm your identity is already in our system or add your information to
+the system. You cannot create new accounts at ATMs.
+
+## Payments
+
+Payments are available via the payment interface. At Nickel Bank we only allow payment via Card because we are
+deprecating checks. You can pay to any vendor name. If the name entered is the same as one in our system ignoring case
+we will direct it to the one in our system. We do not currently allow for vendor lookup or smart detection of spelling
+errors but this could be implemented in the future.

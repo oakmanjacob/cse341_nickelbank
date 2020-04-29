@@ -116,6 +116,15 @@ public class Account_View {
         System.out.println("Type: " + account.getType().toUpperCase());
         System.out.println("Balance: " + IOManager.formatCurrency(account.getBalance()));
 
+        if ("checking".equals(account.getType()))
+        {
+            System.out.println("Minimum Balance: " + IOManager.formatCurrency(account.getMinBalance()));
+        }
+        else if ("savings".equals(account.getType()))
+        {
+            System.out.println("Interest Rate: " + account.getInterestRate() + "%");
+        }
+
         if (account.getCreated() != null) {
             SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
             String dateOpened = formatter.format(account.getCreated());
