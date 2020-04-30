@@ -49,7 +49,7 @@ email address to verify their identity. If they do not have access to the accoun
 
 Withdrawals cannot take accounts regardless of type into a negative balance however checking accounts can be taken
 below their minimum balance but this will subject the transaction to fees. Fees at Nickel Bank consist of the software
-printing out the word "FEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE" which the teller will be instructed to yell at the customer.
+printing out the word "FEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE!!!" which the teller will be instructed to yell at the customer.
 
 Deposits are not available at ATMs but are available at branches. The interface is similar to the withdrawal except
 we do not apply fees to deposits even when a deposit will keep the account below the minimum balance.

@@ -77,7 +77,7 @@ public class Transaction_External extends Transaction {
                 }
 
                 if (fee) {
-                    System.out.println("FEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE");
+                    System.out.println("FEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE!!!");
                     //this.addFee();
                 }
 
