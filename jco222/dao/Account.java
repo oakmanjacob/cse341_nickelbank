@@ -209,7 +209,8 @@ public class Account {
                             "ON c.card_id = cd.card_id " +
                             "INNER JOIN account a " +
                             "ON cd.account_id = a.account_id " +
-                            "WHERE c.card_number = ?");
+                            "WHERE c.card_number = ? " +
+                            "AND c.status = 'active'");
 
             ps.setLong(1, card_number);
 
@@ -294,7 +295,6 @@ public class Account {
         }
 
         Connection conn = DBManager.getConnection();
-        this.owners = new ArrayList<Person>();
 
         try {
             PreparedStatement ps = conn.prepareStatement(

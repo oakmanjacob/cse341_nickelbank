@@ -92,6 +92,16 @@ public class Purchase_View {
             return null;
         }
 
+        if (!"active".equals(card.getType()))
+        {
+            if (IOManager.yesNo("The credentials " + card_number + " with cvc " + cvc + " represent a card which is not active. Do you wish to try again? (Y)es, (N)o"))
+            {
+                return getCard();
+            }
+
+            return null;
+        }
+
         return card;
     }
 

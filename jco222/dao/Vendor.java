@@ -21,6 +21,10 @@ public class Vendor {
         this.name = name;
     }
 
+    /**
+     * Save a new vendor to the database
+     * @return whether the save was successful
+     */
     public boolean save()
     {
         Connection conn = DBManager.getConnection();
@@ -32,7 +36,6 @@ public class Vendor {
             try (
                     OraclePreparedStatement ps = (OraclePreparedStatement)conn.prepareStatement(query);
             ) {
-                //ps.setString(1, table_name);
                 ps.setString(1, this.name);
                 ps.registerReturnParameter(2, Types.NUMERIC);
 
@@ -44,20 +47,26 @@ public class Vendor {
 
                 if (rs != null && rs.next()) {
                     this.vendor_id = rs.getLong(1);
+                    return true;
                 }
                 else
                 {
-                    throw new SQLException("Row possibly not inserted or something");
+                    return false;
                 }
-            } catch (SQLException e) {
-                e.printStackTrace();
+            }
+            catch (SQLException e) {
                 return false;
             }
-            return true;
         }
         return false;
     }
 
+    /**
+     * Lookup vendor in the database via a name
+     * Match case insensitive
+     * @param name
+     * @return the Vendor found or null if not found
+     */
     public static Vendor fromName(String name)
     {
         Connection conn = DBManager.getConnection();
@@ -91,6 +100,8 @@ public class Vendor {
         return vendor;
     }
 
+
+    // Getters and Setters
     public long getVendorId() {
         return vendor_id;
     }

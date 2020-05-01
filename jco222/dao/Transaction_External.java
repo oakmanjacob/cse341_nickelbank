@@ -45,6 +45,12 @@ public class Transaction_External extends Transaction {
                     }
                 }
 
+                if (!"active".equals(card.getStatus()))
+                {
+                    DBManager.rollbackAndResetAutoCommit();
+                    return false;
+                }
+
                 // Block transactions which will set the sending account to less than $0
                 boolean fee = false;
                 if (card.getAvailableBalance() < amount)
@@ -89,7 +95,6 @@ public class Transaction_External extends Transaction {
                 conn.commit();
                 conn.setAutoCommit(true);
             } catch (SQLException e) {
-                e.printStackTrace();
                 DBManager.rollbackAndResetAutoCommit();
                 return false;
             }

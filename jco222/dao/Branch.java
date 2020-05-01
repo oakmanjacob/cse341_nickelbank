@@ -21,6 +21,10 @@ public class Branch {
         this.address = address;
     }
 
+    /**
+     * Get all the branches currently in the database
+     * @return A list of branch objects, the list will be empty if query failed
+     */
     public static List<Branch> getAllBranch()
     {
         Connection conn = DBManager.getConnection();
@@ -57,12 +61,15 @@ public class Branch {
         }
         catch (SQLException e)
         {
-            e.printStackTrace();
+            return new ArrayList<Branch>();
         }
 
         return branch_list;
     }
 
+    /**
+     * @return a representation of the branch of the form "ATM at 4 Farrington Square, Bethlehem, PA"
+     */
     public String toString()
     {
         if (this.type.equals("atm"))
@@ -73,6 +80,8 @@ public class Branch {
             return "BRANCH at " + this.address.toString();
         }
     }
+
+    // Getters and Setters
 
     public long getBranchId() {
         return branch_id;

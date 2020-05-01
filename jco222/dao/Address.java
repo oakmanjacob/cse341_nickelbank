@@ -19,12 +19,17 @@ public class Address {
         this.zip = zip;
     }
 
+    /**
+     * @return the address of the form "4 Farrington Square, Bethlehem, PA"
+     */
     public String toString()
     {
         String street_address = line_2 != null && !line_2.equals("") ? line_1 + " " + line_2 : line_1;
 
         return street_address  + ", " + city + ", " + state;
     }
+
+    // Getters and Setters
 
     public long getAddressId()
     {

@@ -13,24 +13,18 @@ public class Branch_View {
         List<Branch> branch_list = Branch.getAllBranch();
         Branch branch = null;
 
-        try {
-            if (branch_list.size() == 0) {
-                branch = null;
-            }
-            else if (branch_list.size() == 1)
-            {
-                branch = branch_list.get(0);
-            }
-            else {
-                Object object = IOManager.handleTable(branch_list.toArray(), 5, false);
-                if (object instanceof Branch) {
-                    branch = (Branch) object;
-                }
-            }
+        if (branch_list.size() == 0) {
+            branch = null;
         }
-        catch(Exception e)
+        else if (branch_list.size() == 1)
         {
-            e.printStackTrace();
+            branch = branch_list.get(0);
+        }
+        else {
+            Object object = IOManager.handleTable(branch_list.toArray(), 5, false);
+            if (object instanceof Branch) {
+                branch = (Branch) object;
+            }
         }
 
         System.out.println("Selected: " + branch);

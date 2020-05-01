@@ -1,7 +1,5 @@
 package dao;
 
-import java.sql.Timestamp;
-
 public class Card_Debit extends Card {
     private long account_id;
     private Account account;
@@ -12,11 +10,10 @@ public class Card_Debit extends Card {
         this.account_id = account_id;
     }
 
-    protected void setAccountId(long account_id)
-    {
-        this.account_id = account_id;
-    }
-
+    /**
+     * Get the account associated with this debit card
+     * @return the account associated with this card or null if failed
+     */
     public Account getAccount()
     {
         if (this.account == null)
@@ -29,6 +26,10 @@ public class Card_Debit extends Card {
         }
     }
 
+    /**
+     * Get the current balance available to the credit card
+     * @return the available balance or 0 if failed
+     */
     public double getAvailableBalance()
     {
         Account account = this.getAccount();
@@ -38,7 +39,6 @@ public class Card_Debit extends Card {
             return 0;
         }
 
-        account.updateBalance();
         return account.getBalance();
     }
 }

@@ -6,7 +6,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 
 public class Card_Credit extends Card {
     private double interest_rate;
@@ -19,6 +18,10 @@ public class Card_Credit extends Card {
         this.credit_limit = credit_limit;
     }
 
+    /**
+     * Get the current balance available to the credit card
+     * @return the available balance or 0 if failed
+     */
     public double getAvailableBalance()
     {
         if (this.card_id == 0)
@@ -48,7 +51,6 @@ public class Card_Credit extends Card {
         }
         catch (SQLException e)
         {
-            e.printStackTrace();
             return 0;
         }
     }

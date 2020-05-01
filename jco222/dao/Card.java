@@ -4,6 +4,7 @@ import util.DBManager;
 import util.IOManager;
 
 import java.sql.*;
+import java.util.ArrayList;
 
 public class Card {
     protected long card_id;
@@ -127,6 +128,42 @@ public class Card {
     }
 
     /**
+     * Get the current status of this account as listed in the database
+     * @return the current status as listed in the database or "inactive" if failed
+     */
+    public String getStatus() {
+        if (this.card_id == 0)
+        {
+            return "inactive";
+        }
+
+        Connection conn = DBManager.getConnection();
+
+        try {
+            PreparedStatement ps = conn.prepareStatement(
+                    "SELECT c.status " +
+                            "FROM card c " +
+                            "WHERE c.card_id = ?");
+
+            ps.setLong(1, this.card_id);
+
+            ResultSet result = ps.executeQuery();
+
+            if (result != null && result.next()) {
+                return result.getString("status");
+            }
+            else
+            {
+                return "inactive";
+            }
+        }
+        catch (SQLException e)
+        {
+            return "inactive";
+        }
+    }
+
+    /**
      * @return a string representation of the Card object of the form "CREDIT CARD ending in ************1234 Balance: $123.45"
      */
     public String toString()
@@ -165,9 +202,8 @@ public class Card {
         return cvc;
     }
 
-    public String getStatus() {
-        return status;
-    }
+
+
 
     public void setStatus(String status) {
         this.status = status;

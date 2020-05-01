@@ -24,6 +24,10 @@ public class Transaction {
         this.status = status;
     }
 
+    /**
+     * Save new Transaction to the database
+     * @return whether the save was successful
+     */
     public boolean save()
     {
         if (this.transaction_id == 0)
@@ -73,7 +77,6 @@ public class Transaction {
                     throw new SQLException("Row possibly not inserted");
                 }
             } catch (SQLException e) {
-                e.printStackTrace();
                 return false;
             }
             return true;
@@ -81,10 +84,7 @@ public class Transaction {
         return false;
     }
 
-    public boolean delete()
-    {
-        return false;
-    }
+    //Getters and Setters
 
     public long getTransactionId() {
         return transaction_id;
