@@ -19,7 +19,7 @@ public class Person {
     private Date birth_date;
 
     /**
-     * External constructor for person objects
+     * Constructor for creating new person objects for the database
      */
     public Person()
     {
@@ -28,7 +28,7 @@ public class Person {
 
 
     /**
-     * Internal constructor to create Person objects from database information
+     * Constructor to create Person objects from database information
      * @param person_id
      * @param first_name
      * @param last_name
@@ -36,7 +36,7 @@ public class Person {
      * @param phone
      * @param birth_date
      */
-    private Person(long person_id, String first_name, String last_name, String email, String phone, Date birth_date)
+    public Person(long person_id, String first_name, String last_name, String email, String phone, Date birth_date)
     {
         this.person_id = person_id;
         this.first_name = first_name;
