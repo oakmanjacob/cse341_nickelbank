@@ -94,7 +94,7 @@ public class Vendor {
         }
         catch (SQLException e)
         {
-            e.printStackTrace();
+            return null;
         }
 
         return vendor;

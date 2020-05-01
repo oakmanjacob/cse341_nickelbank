@@ -130,7 +130,6 @@ public class Transaction_Transfer extends Transaction {
                   conn.commit();
                   conn.setAutoCommit(true);
             } catch (SQLException e) {
-                  e.printStackTrace();
                   DBManager.rollbackAndResetAutoCommit();
                   return false;
             }

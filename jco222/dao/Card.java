@@ -95,7 +95,7 @@ public class Card {
         }
         catch (SQLException e)
         {
-            e.printStackTrace();
+            return null;
         }
 
         return card;
