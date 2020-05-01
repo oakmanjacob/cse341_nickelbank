@@ -17,7 +17,8 @@ public class Transaction {
 
     public Transaction(double amount, Person person, Branch branch, String type, String status)
     {
-        this.amount = amount;
+        // Round to 2 decimal places
+        this.amount = Math.round(amount * 100.0) / 100.0;
         this.person = person;
         this.branch = branch;
         this.type = type;

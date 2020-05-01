@@ -170,6 +170,11 @@ public class Account_View {
             return;
         }
 
+        if (Account_View.cache_person == null) {
+            System.out.println("Please confirm your identity before withdrawal");
+            Account_View.cache_person = Person_View.getFromEmail(false);
+        }
+
         boolean repeat = true;
         while (repeat) {
             System.out.println("How much would you like to withdrawal from your account?");
@@ -209,11 +214,6 @@ public class Account_View {
                     Account_View.cur_branch = Branch_View.getBranch();
                 }
 
-                if (Account_View.cache_person == null) {
-                    System.out.println("Please confirm your identity before withdrawal");
-                    Account_View.cache_person = Person_View.getFromEmail(false);
-                }
-
                 if (account.hasOwner(Account_View.cache_person)) {
                     if (account.withdrawal(amount, cache_person, cur_branch)) {
                         System.out.println("Withdrawal successful!");
@@ -235,7 +235,6 @@ public class Account_View {
             }
         }
 
-        Account_View.cache_person = null;
         Account_View.cacheAccount(account);
     }
 
@@ -251,6 +250,11 @@ public class Account_View {
             return;
         }
 
+        if (Account_View.cache_person == null) {
+            System.out.println("Please confirm your identity before deposit");
+            Account_View.cache_person = Person_View.getFromEmail(false);
+        }
+
         boolean repeat = true;
         while (repeat) {
             System.out.println("How much would you like to deposit into your account?");
@@ -261,11 +265,6 @@ public class Account_View {
                 repeat = false;
                 if (Account_View.cur_branch == null) {
                     Account_View.cur_branch = Branch_View.getBranch();
-                }
-
-                if (Account_View.cache_person == null) {
-                    System.out.println("Please confirm your identity before deposit");
-                    Account_View.cache_person = Person_View.getFromEmail(false);
                 }
 
                 if (account.hasOwner(Account_View.cache_person)) {
