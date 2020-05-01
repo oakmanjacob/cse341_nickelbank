@@ -60,6 +60,12 @@ Full branches can also handle deposits and opening new accounts. You can also ac
 more methods including account number and a lookup via email. The most recent account to be accessed can
 be cached for easy later transactions.
 
+Note: Lengths of numbers
+Account numbers are standardized to 12 characters long
+Card numbers are standardized to 16 characters long
+CVCs are standardized to being 3 or 4 characters long
+The software tests for these standards and will not accept anything which doesn't meet this.
+
 
 ### Account Info
 
@@ -73,7 +79,8 @@ email address to verify their identity. If they do not have access to the accoun
 
 Withdrawals cannot take accounts regardless of type into a negative balance however checking accounts can be taken
 below their minimum balance but this will subject the transaction to fees. Fees at Nickel Bank consist of the software
-printing out the word "FEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE!!!" which the teller will be instructed to yell at the customer.
+printing out the word "FEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE!!!" which the teller will be instructed to yell at the
+customer.
 
 Deposits are not available at ATMs but are available at branches. The interface is similar to the withdrawal except
 we do not apply fees to deposits even when a deposit will keep the account below the minimum balance.
@@ -96,9 +103,8 @@ errors but this could be implemented in the future.
 
 ## Currently Unused functionality
 
-There have been triggers set up to generate card numbers and cvcs for new credit and debit cards
-
-There is also a view to see the current balances owed on loans
+There have been triggers set up to generate card numbers and CVCs for new credit and debit cards.
+There is also a view to see the current balances owed on loans.
 
 ## Known bugs
 
@@ -111,3 +117,12 @@ has since become obsolete and will not compile. There are however, files in the 
 with sql representations of the database which can be used to rebuild the database on a system failure.
 
 ## Future Development
+
+We must soon expand functionality to include Loans, Card Payments and an interface to show overall Banking Management
+Statistics. The Bank Management area is already in the process of construction but has been hidden from view in this
+version because it had no functionality.
+
+It may be a good idea for reporting to link accounts to the branches they were created at.
+
+Fiscally, our public shaming policy for fees may not be the best and it may be pertinent to add monetary fees which
+will be applied as children of the inciting transaction.
