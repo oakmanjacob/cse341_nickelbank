@@ -1,4 +1,3 @@
-import init.Init;
 import util.DBManager;
 import util.IOManager;
 import view.Account_View;
@@ -19,6 +18,11 @@ public class Main {
             "Built on a foundation of Liberty, Integrity, Equity and Security!"
     };
 
+    /**
+     * Point of entry for program
+     * Display Logo and dashboard
+     * @param args
+     */
     public static void main(String[] args) {
         DBManager dbManager = new DBManager();
         dbManager.connect();
@@ -42,28 +46,32 @@ public class Main {
         }
         catch(Exception e)
         {
-            e.printStackTrace();
+            IOManager.printError();
+            System.out.println("Nickel Bank has encountered a fatal error and must abort");
         }
 
         dbManager.disconnect();
     }
 
+    /**
+     * Handle navigation on the Nickel Bank dashboard
+     */
     public static void dashboard()
     {
         while (true) {
             System.out.println("\nBanking Dashboard");
-            System.out.println("(B)ank management, (A)ccounts, (P)urchases, (E)xit");
+            System.out.println("(A)ccounts, (P)urchases, (E)xit");
 
             String input = IOManager.getInputStringLower();
 
             switch (input) {
-                case "b":
-                case "bank":
-                case "bank management":
-                case "manage":
-                case "management":
-                    Bank_View.getView();
-                    break;
+//                case "b":
+//                case "bank":
+//                case "bank management":
+//                case "manage":
+//                case "management":
+//                    Bank_View.getView();
+//                    break;
                 case "a":
                 case "account":
                 case "accounts":

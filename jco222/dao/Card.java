@@ -15,6 +15,17 @@ public class Card {
     protected Timestamp created;
     protected Timestamp modified;
 
+    /**
+     * Internal constructor for creating using data fetched from a record in the db
+     * @param card_id
+     * @param person_id
+     * @param type
+     * @param card_number
+     * @param cvc
+     * @param status
+     * @param created
+     * @param modified
+     */
     protected Card(long card_id, long person_id, String type, long card_number, int cvc, String status, Timestamp created, Timestamp modified)
     {
         this.card_id = card_id;
@@ -27,6 +38,12 @@ public class Card {
         this.modified = modified;
     }
 
+    /**
+     * Lookup based on the card number and cvc
+     * @param card_number
+     * @param cvc
+     * @return Card object with matching card_number and cvc from db or null if error
+     */
     public static Card fromCardNumber(long card_number, int cvc)
     {
         Connection conn = DBManager.getConnection();
@@ -83,6 +100,12 @@ public class Card {
         return card;
     }
 
+    /**
+     * Use card to create transaction to pay a vendor a specific amount
+     * @param amount
+     * @param vendor
+     * @return boolean of whether the payment was successful
+     */
     public boolean pay(double amount, Vendor vendor)
     {
         if (vendor == null)
@@ -94,20 +117,33 @@ public class Card {
         return payment.save();
     }
 
+    /**
+     * Placeholder method used to be able to access getAvailableBalance methods in child objects without casting
+     * @return the amount of money available to be spent from the card
+     */
     public double getAvailableBalance()
     {
         return 0;
     }
 
+    /**
+     * @return a string representation of the Card object of the form "CREDIT CARD ending in ************1234 Balance: $123.45"
+     */
     public String toString()
     {
         return this.type.toUpperCase() + " CARD ending in ************" + this.getLastFour() + " Balance: " + IOManager.formatCurrency(this.getAvailableBalance());
     }
 
+    /**
+     * @return the last four digits of the card number
+     */
     public long getLastFour()
     {
         return card_number % 10000;
     }
+
+
+    // Getters and Setters
 
     public long getCardId() {
         return card_id;

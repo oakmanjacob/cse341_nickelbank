@@ -3,6 +3,10 @@ package view;
 import util.IOManager;
 
 public class Bank_View {
+
+    /**
+     * Display the main Bank Management area
+     */
     public static void getView()
     {
         System.out.println("Hey there banker, I bet you wanna see some fat stats about the health of your bank!");
@@ -11,6 +15,8 @@ public class Bank_View {
         System.out.println("(T)otal Deposits, (B)ranch Activity (E)xit");
 
         String input = IOManager.getInputStringLower();
+
+        //TODO finish this
     }
 
     public static void getTotalBalance()

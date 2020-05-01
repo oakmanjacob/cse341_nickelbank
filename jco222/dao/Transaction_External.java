@@ -18,6 +18,11 @@ public class Transaction_External extends Transaction {
         this.vendor = vendor;
     }
 
+    /**
+     * Save a new external transaction to the database, handling fees and failing if the transaction would overdraw
+     * the card
+     * @return boolean whether the transaction has been successfully saved
+     */
     public boolean save()
     {
         Connection conn = DBManager.getConnection();
@@ -57,6 +62,7 @@ public class Transaction_External extends Transaction {
                     return false;
                 }
 
+                // Send transaction
                 ps.setLong(1, this.transaction_id);
                 ps.setLong(2, this.card.getCardId());
                 ps.setLong(3, this.vendor.getVendorId());
@@ -78,7 +84,6 @@ public class Transaction_External extends Transaction {
 
                 if (fee) {
                     System.out.println("FEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE!!!");
-                    //this.addFee();
                 }
 
                 conn.commit();

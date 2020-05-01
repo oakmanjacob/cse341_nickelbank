@@ -58,14 +58,19 @@ public class Person_View {
     }
 
     /**
-     *
-     * @return
+     * Walk through the process of looking up or signing up a customer for our system
+     * @return a newly created Person object which has been populated and is in the db
      */
     public static Person getFromEmail()
     {
         return getFromEmail(true);
     }
 
+    /**
+     * Walk through the process of looking up or signing up a customer for our system
+     * @param canCreate determine whether signing up a new person is allowed from this screen
+     * @return a newly created Person object which has been populated and is in the db
+     */
     public static Person getFromEmail(boolean canCreate)
     {
         System.out.println("Please input your email.");

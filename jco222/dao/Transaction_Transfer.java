@@ -14,6 +14,14 @@ public class Transaction_Transfer extends Transaction {
             super(amount, person, branch, type, status);
       }
 
+      /**
+       * Create Transaction_Transfer object for a new deposit into a specific account
+       * @param amount
+       * @param account
+       * @param person
+       * @param branch
+       * @return Transaction_Transfer object populated with transaction information or null if failed
+       */
       public static Transaction_Transfer getDeposit(double amount, Account account, Person person, Branch branch)
       {
             if (account != null && account.getAccountId() != 0 &&
@@ -27,6 +35,14 @@ public class Transaction_Transfer extends Transaction {
             return null;
       }
 
+      /**
+       * Create Transaction_Transfer object for a new withdrawal from a specific account
+       * @param amount
+       * @param account
+       * @param person
+       * @param branch
+       * @return Transaction_Transfer object populated with transaction information or null if failed
+       */
       public static Transaction_Transfer getWithdrawal(double amount, Account account, Person person, Branch branch)
       {
             if (account != null && account.getAccountId() != 0 &&
@@ -40,6 +56,11 @@ public class Transaction_Transfer extends Transaction {
             return null;
       }
 
+      /**
+       * Save a new transfer transaction to the database, handling fees and failing if the transaction would overdraw
+       * the account
+       * @return boolean whether the transaction has been successfully saved
+       */
       public boolean save()
       {
             Connection conn = DBManager.getConnection();
@@ -56,7 +77,6 @@ public class Transaction_Transfer extends Transaction {
 
                   // Block transactions which will set the sending account to less than $0
                   if (this.from_account != null) {
-                        this.from_account.updateBalance();
                         if (this.from_account.getBalance() < this.amount) {
                               DBManager.rollbackAndResetAutoCommit();
                               return false;
@@ -116,6 +136,8 @@ public class Transaction_Transfer extends Transaction {
             }
             return true;
       }
+
+      // Getters and Setters
 
       public Account getFromAccount() {
             return from_account;

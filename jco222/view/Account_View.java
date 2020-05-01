@@ -14,6 +14,9 @@ public class Account_View {
     public static Account cache_account = null;
     public static Person cache_person = null;
 
+    /**
+     * Display the default interface for Account Management
+     */
     public static void getView() {
         boolean repeat = true;
         while (repeat) {
@@ -35,6 +38,10 @@ public class Account_View {
         }
     }
 
+    /**
+     * Display the interface for branches with full functionality
+     * @return whether to leave the Account Management interface
+     */
     public static boolean getBranchView()
     {
         System.out.println("(A)ccount Info, (W)ithdrawal, (D)eposit, (C)reate account, (S)witch Branch, (B)ack");
@@ -73,6 +80,10 @@ public class Account_View {
         return true;
     }
 
+    /**
+     * Display the interface for ATMs with limited functionality
+     * @return whether to leave the Account Management interface
+     */
     public static boolean getATMView()
     {
         System.out.println("(A)ccount Info, (W)ithdrawal, (S)witch Branch, (B)ack");
@@ -103,6 +114,9 @@ public class Account_View {
         return true;
     }
 
+    /**
+     * Display interface for getting information about a specific account
+     */
     public static void getAccountInfoView() {
         Account account = getAccount();
 
@@ -134,6 +148,9 @@ public class Account_View {
         Account_View.cacheAccount(account);
     }
 
+    /**
+     * Walk the user through setting up a new withdrawal
+     */
     public static void getWithdrawalView() {
         Account account = getAccount();
 
@@ -212,6 +229,9 @@ public class Account_View {
         Account_View.cacheAccount(account);
     }
 
+    /**
+     * Walk the user through setting up a new deposit
+     */
     public static void getDepositView() {
         Account account = getAccount();
 
@@ -259,6 +279,9 @@ public class Account_View {
         Account_View.cacheAccount(account);
     }
 
+    /**
+     * Walk the user through setting up a new account
+     */
     public static void getOpenAccountView() {
         System.out.println("Let's start the account creation process!");
         Person person = null;
@@ -330,25 +353,15 @@ public class Account_View {
         cacheAccount(account);
     }
 
-    public static void cacheAccount(Account account)
-    {
-        if (IOManager.yesNo("\nShould we keep this account handy for future transactions? (Y)es, (N)o")) {
-            System.out.println("We'll keep it nearby then!");
-            Account_View.cache_account = account;
-        }
-        else
-        {
-            Account_View.cache_person = null;
-            Account_View.cache_account = null;
-        }
-    }
-
+    /**
+     * Walk user through creating a savings account
+     * @return the created account or null if an account was not created
+     */
     public static Account createSavingsAccount()
     {
-        Account account = new Account();
-        account.setType("savings");
-        boolean repeat = true;
+        Account account = new Account("savings");
 
+        boolean repeat = true;
         while (repeat)
         {
             repeat = false;
@@ -377,12 +390,15 @@ public class Account_View {
         return account;
     }
 
+    /**
+     * Walk user through creating a checking account
+     * @return the created account or null if an account was not created
+     */
     public static Account createCheckingAccount()
     {
-        Account account = new Account();
-        account.setType("checking");
-        boolean repeat = true;
+        Account account = new Account("checking");
 
+        boolean repeat = true;
         while (repeat)
         {
             repeat = false;
@@ -411,11 +427,30 @@ public class Account_View {
         return account;
     }
 
+    /**
+     * Cache account upon request from user
+     */
+    public static void cacheAccount(Account account)
+    {
+        if (IOManager.yesNo("\nShould we keep this account handy for future transactions? (Y)es, (N)o")) {
+            System.out.println("We'll keep it nearby then!");
+            Account_View.cache_account = account;
+        }
+        else
+        {
+            Account_View.cache_person = null;
+            Account_View.cache_account = null;
+        }
+    }
+
+    /**
+     * Help user identify an account they want to interact with
+     * @return the account they wish to interact with or null if no account is selected
+     */
     public static Account getAccount()
     {
         if (cache_account != null && IOManager.yesNo(
                 "We have an account ending in " + cache_account.getLastFour() + " handy, is this the account you want? (Y)es, (N)o")) {
-            cache_account.updateBalance();
             return cache_account;
         }
 
@@ -445,6 +480,10 @@ public class Account_View {
         }
     }
 
+    /**
+     * Walk user through looking up an account via an account number
+     * @return the account or null if no account was found
+     */
     public static Account getFromNumber()
     {
         System.out.println("Please input your account number.");
@@ -465,6 +504,10 @@ public class Account_View {
         return account;
     }
 
+    /**
+     * Walk user through looking up an account via a debit card
+     * @return the account or null if no account was found
+     */
     public static Account getFromCard()
     {
         System.out.println("Please input your debit card number.");
@@ -487,6 +530,10 @@ public class Account_View {
         return account;
     }
 
+    /**
+     * Walk user through looking up an account via their email address
+     * @return the account or null if no account was found
+     */
     public static Account getFromLookup()
     {
         System.out.println("Input your email address and we can give you a list of you accounts.");
