@@ -334,31 +334,31 @@ public class Account_View {
                 default:
                     repeat = true;
             }
-
-            if (account == null)
-            {
-                System.out.println("Cancelling Account creation process.");
-                return;
-            }
-
-            account.addPerson(person);
-
-            if (IOManager.yesNo("Do you want us to also open several other accounts under your name without your knowledge? (Y)es, (Y)es"))
-            {
-                System.out.println("Perfect, we'll keep that in mind for later!");
-            }
-            else
-            {
-                System.out.println("Thanks for your input!");
-            }
-
-            if (!account.save())
-            {
-                System.out.println("There was some error in the account creation process!");
-            }
-
-            System.out.println("Account successfully created! your new account number is " +  account.getAccountNumber() + "\n\n");
         }
+
+        if (account == null)
+        {
+            System.out.println("Cancelling Account creation process.");
+            return;
+        }
+
+        account.addPerson(person);
+
+        if (IOManager.yesNo("Do you want us to also open several other accounts under your name without your knowledge? (Y)es, (Y)es"))
+        {
+            System.out.println("Perfect, we'll keep that in mind for later!");
+        }
+        else
+        {
+            System.out.println("Thanks for your input!");
+        }
+
+        if (!account.save())
+        {
+            System.out.println("There was some error in the account creation process!");
+        }
+
+        System.out.println("Account successfully created! your new account number is " +  account.getAccountNumber() + "\n\n");
 
         cacheAccount(account);
     }

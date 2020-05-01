@@ -19,12 +19,15 @@ You will want to have a decent size terminal window to allow for our logo to not
 ## Interesting data items
 ###Interesting accounts:
 
+229204557358 - Checking account with no transactions
+owner: sage1975@yahoo.com
+
 172948734844 - Savings with only one owner
-sage1975@yahoo.com
+owner: sage1975@yahoo.com
 
 
 440744249873 - Checking with two owners
-kklein@gmail.com and RubyRios@gmail.com
+owners: kklein@gmail.com and RubyRios@gmail.com
 
 
 ###Interesting debit cards:
@@ -38,7 +41,7 @@ Both connected to the same account 440744249873 listed earlier
 
 ###Interesting email addresses:
 
-BarrieMe@gmail.com - Has no Accounts
+Dabrick@gmail.com - Has no Accounts
 mjohnson@gmail.com - Has only one Account
 jcar@hotmail.com - Has multiple accounts
 sage1975@yahoo.com - Has multiple accounts
