@@ -177,7 +177,7 @@ public class Account_View {
                     }
                     else
                     {
-                        System.out.println("Canceling withdrawal process.\n");
+                        System.out.println("Canceling withdrawal process.");
                         repeat = false;
                     }
 
@@ -188,7 +188,7 @@ public class Account_View {
                     System.out.println("This withdrawal will take your account below the minimum balance and may subject you to fees.");
 
                     if (!IOManager.yesNo("Are you sure you wish to continue? (Y)es, (N)o")) {
-                        System.out.println("Canceling withdrawal process.\n");
+                        System.out.println("Canceling withdrawal process.");
                         repeat = false;
                         continue;
                     }
@@ -219,7 +219,7 @@ public class Account_View {
             }
             else {
                 if (!IOManager.yesNo("Would you like to withdrawal a different amount from this account? (Y)es, (N)o")) {
-                    System.out.println("Canceling withdrawal process.\n");
+                    System.out.println("Canceling withdrawal process.");
                     repeat = false;
                 }
             }
@@ -271,7 +271,7 @@ public class Account_View {
                 }
             }
             else if (!IOManager.yesNo("Would you like to deposit a different amount into this account? (Y)es, (N)o")) {
-                System.out.println("Canceling deposit process.\n");
+                System.out.println("Canceling deposit process.");
                 repeat = false;
             }
         }
@@ -517,7 +517,8 @@ public class Account_View {
 
         if (account == null)
         {
-            if (IOManager.yesNo("We can't find an account with the debit card number " + card_number + " Do you wish to try again? (Y)es, (N)o"))
+            if (IOManager.yesNo("We can't find an account with the debit card number " + card_number + ".\n" +
+                    "This number may be invalid or belong to a card which has been deactivated. Do you wish to try again? (Y)es, (N)o"))
             {
                 return getFromCard();
             }
