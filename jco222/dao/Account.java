@@ -358,6 +358,58 @@ public class Account {
     }
 
     /**
+     * Update list of owners from database
+     * @return whether this was successful
+     */
+    public boolean updateOwnerList()
+    {
+        if (this.account_id == 0)
+        {
+            return false;
+        }
+
+        Connection conn = DBManager.getConnection();
+        this.owners = new ArrayList<Person>();
+
+        try {
+            PreparedStatement ps = conn.prepareStatement(
+                    "SELECT p.* " +
+                            "FROM person p " +
+                            "INNER JOIN person_account pa " +
+                            "ON p.person_id = pa.person_id " +
+                            "WHERE pa.account_id = ? " +
+                            "ORDER BY p.created ASC");
+
+            ps.setLong(1, this.account_id);
+
+            ResultSet result = ps.executeQuery();
+
+            if (result != null && result.next()) {
+                do {
+                    this.owners.add(new Person(
+                            result.getLong("person_id"),
+                            result.getString("first_name"),
+                            result.getString("last_name"),
+                            result.getString("email"),
+                            result.getString("phone"),
+                            result.getDate("birth_date")));
+                }
+                while (result.next());
+            }
+            else
+            {
+                return false;
+            }
+        }
+        catch (SQLException e)
+        {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
      * Create deposit transaction into this account
      * @param amount
      * @param person
@@ -454,5 +506,10 @@ public class Account {
     public void addPerson(Person person)
     {
         this.owners.add(person);
+    }
+
+    public List<Person> getOwnerList()
+    {
+        return this.owners;
     }
 }

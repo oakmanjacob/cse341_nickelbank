@@ -149,6 +149,24 @@ public class Account_View {
             System.out.println("Interest Rate: " + account.getInterestRate() + "%");
         }
 
+        account.updateOwnerList();
+        List<Person> person_list = account.getOwnerList();
+
+        if (person_list != null && person_list.size() > 0) {
+            if (person_list.size() == 1)
+            {
+                System.out.println("Owner: " + person_list.get(0));
+            }
+            else
+            {
+                System.out.println("Owners: ");
+                for (Person person : person_list)
+                {
+                    System.out.println(person);
+                }
+            }
+        }
+
         if (account.getCreated() != null) {
             SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
             String dateOpened = formatter.format(account.getCreated());

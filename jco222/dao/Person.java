@@ -240,7 +240,7 @@ public class Person {
      */
     public String toString()
     {
-        return this.first_name + " " + this.last_name;
+        return this.first_name + " " + this.last_name + " " + this.email;
     }
 
 
