@@ -7,6 +7,10 @@ import util.IOManager;
 public class Purchase_View {
 
     public static Card cache_card;
+
+    /**
+     * Handle main view for purchases
+     */
     public static void getView()
     {
         Vendor vendor;
@@ -17,6 +21,9 @@ public class Purchase_View {
         }
     }
 
+    /**
+     * Walk user through purchase process
+     */
     public static void getPurchaseView()
     {
         Card card = Purchase_View.getCard();
@@ -30,6 +37,13 @@ public class Purchase_View {
         System.out.println(card);
 
         Vendor vendor = Purchase_View.getVendor();
+
+        if (vendor == null)
+        {
+            System.out.println("Cancelling purchase process.");
+            Purchase_View.cacheCard(card);
+            return;
+        }
 
         boolean repeat = true;
         while (repeat) {
@@ -48,7 +62,7 @@ public class Purchase_View {
 
                 System.out.println("This payment will take your account below the minimum balance and may subject you to fees.");
                 if (!IOManager.yesNo("Are you sure you wish to continue? (Y)es, (N)o")) {
-                    System.out.println("Canceling withdrawal process.\n");
+                    System.out.println("Canceling purchase process.");
                     repeat = false;
                     continue;
                 }
@@ -58,7 +72,7 @@ public class Purchase_View {
                 repeat = false;
                 card.pay(amount, vendor);
             } else if (!IOManager.yesNo("Would you like to pay a different amount? (Y)es, (N)o")) {
-                System.out.println("Canceling withdrawal process.\n");
+                System.out.println("Canceling purchase process.");
                 repeat = false;
             }
         }
@@ -66,6 +80,10 @@ public class Purchase_View {
         Purchase_View.cacheCard(card);
     }
 
+    /**
+     * Help user find a card to use in their purchases via card number and cvc
+     * @return the card object or null if no card was found
+     */
     public static Card getCard()
     {
         if (Purchase_View.cache_card != null && IOManager.yesNo("We have the card " +
@@ -92,7 +110,7 @@ public class Purchase_View {
             return null;
         }
 
-        if (!"active".equals(card.getType()))
+        if (!"active".equals(card.getStatus()))
         {
             if (IOManager.yesNo("The credentials " + card_number + " with cvc " + cvc + " represent a card which is not active. Do you wish to try again? (Y)es, (N)o"))
             {
@@ -105,19 +123,33 @@ public class Purchase_View {
         return card;
     }
 
+    /**
+     * Help user find the vendor they wish to pay
+     * @return the vendor or null if no vendor was input
+     */
     public static Vendor getVendor()
     {
         System.out.println("Who would you like to pay?");
         String name = IOManager.getInputString();
 
-        Vendor vendor = Vendor.fromName(name);
+        if (name.length() > 0) {
 
-        if (vendor == null)
-        {
-            vendor = new Vendor(name);
+            Vendor vendor = Vendor.fromName(name);
+
+            if (vendor == null) {
+                vendor = new Vendor(name);
+            }
+
+            return vendor;
         }
-
-        return vendor;
+        else
+        {
+            if (IOManager.yesNo("The value you are trying to input is invalid, do you wish to try again? (Y)es, (N)o"))
+            {
+                return getVendor();
+            }
+        }
+        return null;
     }
 
     public static void cacheCard(Card card)

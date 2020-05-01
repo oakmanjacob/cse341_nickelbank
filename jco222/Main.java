@@ -89,7 +89,7 @@ public class Main {
                     return;
                 default: {
                     IOManager.printError();
-                    System.out.println("We do not have a section for \"" + input + "\" please try again");
+                    System.out.println("We do not have a section for \"" + input + "\". Please try again");
                 }
             }
         }

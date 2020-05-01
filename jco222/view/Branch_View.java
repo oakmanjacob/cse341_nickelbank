@@ -27,8 +27,6 @@ public class Branch_View {
             }
         }
 
-        System.out.println("Selected: " + branch);
-
         return branch;
     }
 }

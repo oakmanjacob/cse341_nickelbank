@@ -16,6 +16,33 @@ This will run the jar command to generate a jar file jco222.jar
 $> java -jar jco222.jar
 You will want to have a decent size terminal window to allow for our logo to not wrap.
 
+## Interesting data items
+###Interesting accounts:
+
+172948734844 - Savings with only one owner
+sage1975@yahoo.com
+
+
+440744249873 - Checking with two owners
+kklein@gmail.com and RubyRios@gmail.com
+
+
+###Interesting debit cards:
+
+1875914840268458 CVC 624
+5279801148488861 CVC 651
+Both connected to the same account 440744249873 listed earlier
+
+9392105601421203 CVC 617 inactive debit card
+
+
+###Interesting email addresses:
+
+BarrieMe@gmail.com - Has no Accounts
+mjohnson@gmail.com - Has only one Account
+jcar@hotmail.com - Has multiple accounts
+sage1975@yahoo.com - Has multiple accounts
+
 
 ## Bank Management
 
@@ -29,29 +56,6 @@ You can only interact with ATM's through a debit card and can only check account
 Full branches can also handle deposits and opening new accounts. You can also access your accounts through
 more methods including account number and a lookup via email. The most recent account to be accessed can
 be cached for easy later transactions.
-
-Interesting accounts:
-172948734844 - Savings with only one owner
-sage1975@yahoo.com
-
-
-440744249873 - Checking with two owners
-kklein@gmail.com and RubyRios@gmail.com
-
-
-Interesting debit cards:
-1875914840268458 CVC 624
-5279801148488861 CVC 651
-Both connected to the same account 440744249873 listed earlier
-
-9392105601421203 CVC 617 inactive debit card
-
-
-Interesting email addresses:
-BarrieMe@gmail.com - Has no Accounts
-mjohnson@gmail.com - Has only one Account
-jcar@hotmail.com - Has multiple accounts
-sage1975@yahoo.com - Has multiple accounts
 
 
 ### Account Info

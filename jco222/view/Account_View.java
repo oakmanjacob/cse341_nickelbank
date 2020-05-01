@@ -26,8 +26,14 @@ public class Account_View {
             }
 
             System.out.println("\nAccount Management");
+            if (Account_View.cur_branch != null)
+            {
+                System.out.println("From " + Account_View.cur_branch);
+            }
+
             if (Account_View.cur_branch == null || "full".equals(Account_View.cur_branch.getType()))
             {
+
                 repeat = Account_View.getBranchView();
             }
             else
@@ -51,6 +57,7 @@ public class Account_View {
             case "a":
             case "account":
             case "account info":
+            case "info":
                 Account_View.getAccountInfoView();
                 break;
             case "w":
@@ -75,6 +82,9 @@ public class Account_View {
             case "b":
             case "back":
                 return false;
+            default :
+                IOManager.printError();
+                System.out.println("We do not have a section for \"" + input + "\". Please try again");
         }
 
         return true;
