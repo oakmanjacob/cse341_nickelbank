@@ -88,7 +88,6 @@ public class Account {
                 conn.commit();
                 conn.setAutoCommit(true);
             } catch (SQLException e) {
-                e.printStackTrace();
                 DBManager.rollbackAndResetAutoCommit();
                 return false;
             }
@@ -131,7 +130,7 @@ public class Account {
         }
         catch (SQLException e)
         {
-            e.printStackTrace();
+            return null;
         }
 
         return account;
@@ -171,7 +170,7 @@ public class Account {
         }
         catch (SQLException e)
         {
-            e.printStackTrace();
+            return null;
         }
 
         return account;
@@ -214,7 +213,7 @@ public class Account {
         }
         catch (SQLException e)
         {
-            e.printStackTrace();
+            return null;
         }
 
         return account;
@@ -258,7 +257,7 @@ public class Account {
         }
         catch (SQLException e)
         {
-            e.printStackTrace();
+            return new ArrayList<Account>();
         }
 
         return account_list;
@@ -294,7 +293,6 @@ public class Account {
         }
         catch (SQLException e)
         {
-            e.printStackTrace();
             return false;
         }
 
@@ -343,7 +341,6 @@ public class Account {
         }
         catch (SQLException e)
         {
-            e.printStackTrace();
             return false;
         }
 
@@ -376,7 +373,6 @@ public class Account {
         }
         catch (SQLException e)
         {
-            e.printStackTrace();
             return false;
         }
 

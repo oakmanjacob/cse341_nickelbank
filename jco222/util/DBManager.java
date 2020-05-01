@@ -36,7 +36,7 @@ public class DBManager {
             }
             catch (SQLException e)
             {
-                e.printStackTrace();
+
             }
         }
     }
@@ -55,7 +55,6 @@ public class DBManager {
         }
         catch (SQLException e)
         {
-            e.printStackTrace();
             return false;
         }
     }
@@ -87,7 +86,6 @@ public class DBManager {
         }
         catch (SQLException e)
         {
-            System.out.println(e);
             System.out.println("Connect error, re-input connection data");
             return login();
         }

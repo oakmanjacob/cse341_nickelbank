@@ -113,6 +113,10 @@ public class Card {
         return card_id;
     }
 
+    public long getPersonId() {
+        return person_id;
+    }
+
     public String getType() {
         return type;
     }

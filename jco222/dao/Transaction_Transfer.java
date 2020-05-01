@@ -105,7 +105,6 @@ public class Transaction_Transfer extends Transaction {
                   if (fee)
                   {
                         System.out.println("FEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE!!!");
-                        //this.addFee();
                   }
 
                   conn.commit();
@@ -116,14 +115,6 @@ public class Transaction_Transfer extends Transaction {
                   return false;
             }
             return true;
-      }
-
-      public boolean addFee()
-      {
-            Transaction_Transfer fee = new Transaction_Transfer(0.69, this.person, this.branch, "fee", "pending");
-            fee.from_account = this.from_account;
-            fee.parent_transaction_id = this.transaction_id;
-            return fee.save();
       }
 
       public Account getFromAccount() {

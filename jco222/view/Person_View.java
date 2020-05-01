@@ -10,12 +10,22 @@ import java.nio.Buffer;
 import java.sql.*;
 
 public class Person_View {
+
+    /**
+     * Sign up a new customer by asking for email
+     * @return
+     */
     public static Person signup()
     {
         System.out.println("Please input your email address.");
         return signup(IOManager.getInputStringEmail());
     }
 
+    /**
+     * Given an email adress, walk customer through sign up process
+     * @param email the customers unique email address
+     * @return The newly created and saved Person object or null if failed
+     */
     public static Person signup(String email)
     {
         Person person = new Person();
@@ -47,6 +57,10 @@ public class Person_View {
         }
     }
 
+    /**
+     *
+     * @return
+     */
     public static Person getFromEmail()
     {
         return getFromEmail(true);

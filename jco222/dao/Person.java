@@ -8,20 +8,35 @@ import java.sql.*;
 
 public class Person {
 
+    /**
+     * Parameters following those in the database
+     */
     private long person_id = 0;
-
     private String first_name;
     private String last_name;
     private String email;
     private String phone;
     private Date birth_date;
 
+    /**
+     * External constructor for person objects
+     */
     public Person()
     {
-
+        this.person_id = 0;
     }
 
-    public Person(long person_id, String first_name, String last_name, String email, String phone, Date birth_date)
+
+    /**
+     * Internal constructor to create Person objects from database information
+     * @param person_id
+     * @param first_name
+     * @param last_name
+     * @param email
+     * @param phone
+     * @param birth_date
+     */
+    private Person(long person_id, String first_name, String last_name, String email, String phone, Date birth_date)
     {
         this.person_id = person_id;
         this.first_name = first_name;
@@ -30,6 +45,12 @@ public class Person {
         this.birth_date = birth_date;
     }
 
+    /**
+     * Save new Person object to database
+     * Only works for new Person objects
+     * Sets the person_id to match that inserted into the db
+     * @return boolean whether save was successful
+     */
     public boolean save()
     {
         Connection conn = DBManager.getConnection();
@@ -63,7 +84,6 @@ public class Person {
                     throw new SQLException("Row possibly not inserted or something");
                 }
             } catch (SQLException e) {
-                e.printStackTrace();
                 return false;
             }
             return true;
@@ -71,6 +91,12 @@ public class Person {
         return false;
     }
 
+    /**
+     * Get person object initialized with data from database
+     * searching based on a unique person_id
+     * @param person_id the person_id to search using
+     * @return Person object or null if person not found or sql error
+     */
     public static Person fromPersonId(long person_id)
     {
         Connection conn = DBManager.getConnection();
@@ -102,12 +128,18 @@ public class Person {
         }
         catch (SQLException e)
         {
-            e.printStackTrace();
+            return null;
         }
 
         return person;
     }
 
+    /**
+     * Get person object initialized with data from database
+     * searching based on a unique card number
+     * @param card_number the card number to search using
+     * @return Person object or null if person not found or sql error
+     */
     public static Person fromCardNumber(long card_number)
     {
         Connection conn = DBManager.getConnection();
@@ -141,12 +173,18 @@ public class Person {
         }
         catch (SQLException e)
         {
-            e.printStackTrace();
+            return null;
         }
 
         return person;
     }
 
+    /**
+     * Get person object initialized with data from database
+     * searching based on a unique email address
+     * @param email the email to search using
+     * @return Person object or null if person not found or sql error
+     */
     public static Person fromEmail(String email)
     {
         Connection conn = DBManager.getConnection();
@@ -180,28 +218,34 @@ public class Person {
         }
         catch (SQLException e)
         {
-            e.printStackTrace();
+            return null;
         }
 
         return person;
     }
 
+    /**
+     * Compare two Person objects for equality
+     * @param other the other Person
+     * @return whether person_id == other.person_id
+     */
     public boolean equals(Person other)
     {
         return this.person_id == other.person_id;
     }
 
+    /**
+     * Get string representing this object
+     * @return String in the form "firstname lastname"
+     */
     public String toString()
     {
         return this.first_name + " " + this.last_name;
     }
 
-    public boolean delete()
-    {
-        return false;
-    }
 
-    // Getters and setters
+    // Getters and Setters
+
 
     public long getPersonId() { return this.person_id; }
 

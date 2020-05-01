@@ -1,2 +1,2 @@
 Main-class: Main
-Class-Path: ojdbc8.jar dao/*.class init/*.class util/*.class view/*.class
+Class-Path: ojdbc8.jar dao/*.class util/*.class view/*.class
