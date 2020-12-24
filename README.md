@@ -81,7 +81,7 @@ The minimum withdrawal / deposit amount is $1. If the identity of the customer c
 address entered to find accounts or finding an account via a debit card, the customer will have to enter their
 email address to verify their identity. If they do not have access to the account, the transaction will be canceled.  
 
-Withdrawals cannot take accounts regardless of type into a negative balance however checking accounts can be taken
+Withdrawals cannot take accounts, regardless of type, into a negative balance. Checking accounts can be taken
 below their minimum balance but this will subject the transaction to fees. Fees at Nickel Bank consist of the software
 printing out the word "FEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE!!!" which the teller will be instructed to yell at the
 customer.  
