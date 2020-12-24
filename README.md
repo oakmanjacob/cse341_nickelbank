@@ -1,7 +1,6 @@
 # Nickel Bank
 CSE 341  
-Jacob Oakman  
-jco222  
+Jacob Oakman
 
 ## Compiling and building
 ### A simple makefile has been provided for compilation.
