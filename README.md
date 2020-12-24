@@ -13,11 +13,11 @@ This will compile the code into class files stored in /out/
 ```
 $> make jar
 ```
-This will run the jar command to generate a jar file jco222.jar
+This will run the jar command to generate a jar file nickelbank.jar
 
 ### Running
 ```
-$> java -jar jco222.jar
+$> java -jar nickelbank.jar
 ```
 You will want to have a decent size terminal window to allow for our logo to not wrap.
 
